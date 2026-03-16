@@ -1,6 +1,7 @@
 package org.example;
 
 import java.awt.*;
+import java.awt.Rectangle;
 
 public class Player {
     int x = 0;
@@ -9,7 +10,15 @@ public class Player {
     int width = 10;
     int height = 10;
 
+    int hp = 10;
+
+    int speed = 6;
+
     public void draw(Graphics g){
         g.drawRect(x, y, width, height);
+    }
+
+    public Rectangle getBounds(){
+        return new Rectangle(x, y, width, height);
     }
 }

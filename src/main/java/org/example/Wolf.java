@@ -8,11 +8,14 @@ public class Wolf extends Enemy{
     public void update(Player player) {
         if(player.x > x){
             x += speed;
-        } else if(player.y > y){
+        }
+        if(player.y > y){
             y += speed;
-        } else if(player.x < x){
+        }
+        if(player.x < x){
             x -= speed;
-        } else if(player.y < y){
+        }
+        if(player.y < y){
             y -= speed;
         }
     }
@@ -27,7 +30,6 @@ public class Wolf extends Enemy{
         this.y = y;
         width = 20;
         height = 20;
+        speed = 2;
     }
-
-
 }

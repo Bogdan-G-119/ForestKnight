@@ -1,6 +1,7 @@
 package org.example;
 
 import java.awt.*;
+import java.awt.Rectangle;
 
 public abstract class Enemy {
     protected int x = 0;
@@ -16,4 +17,8 @@ public abstract class Enemy {
     public abstract void update(Player player);
 
     public abstract void draw(Graphics g);
+
+    public Rectangle getBounds() {
+        return new Rectangle(x, y, width, height);
+    }
 }

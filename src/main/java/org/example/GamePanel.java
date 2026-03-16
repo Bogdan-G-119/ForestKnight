@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 class GamePanel extends JPanel implements KeyListener {
     ArrayList<Enemy> enemies = new ArrayList<>();
@@ -85,24 +86,38 @@ class GamePanel extends JPanel implements KeyListener {
     }
 
     public void update(){
+        if(player.hp <= 0){
+            //remove player, end game
+        }
         if(upPressed && player.y > 0){
-            player.y -= 5;
+            player.y -= player.speed;
         }
 
         if(leftPressed && player.x > 0){
-            player.x -= 5;
+            player.x -= player.speed;
         }
 
         if(downPressed && player.y < getHeight() - player.height){
-            player.y += 5;
+            player.y += player.speed;
         }
 
         if(rightPressed && player.x < getWidth() - player.width){
-            player.x += 5;
+            player.x += player.speed;
         }
 
         for(Enemy enemy : enemies){
             enemy.update(player);
+
+            if(collisionEnable(enemy)){
+                player.hp--;
+            }
         }
+    }
+
+    private boolean collisionEnable(Enemy enemy) {
+        return player.x < enemy.x + enemy.width &&
+                player.x + player.width > enemy.x &&
+                player.y < enemy.y + enemy.height &&
+                player.y + player.height > enemy.y;
     }
 }
