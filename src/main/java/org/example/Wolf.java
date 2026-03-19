@@ -31,5 +31,8 @@ public class Wolf extends Enemy{
         width = 20;
         height = 20;
         speed = 2;
+        damage = 2;
+        scoreValue = 30;
+        hp = 20;
     }
 }

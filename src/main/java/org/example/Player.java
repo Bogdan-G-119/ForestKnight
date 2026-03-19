@@ -11,8 +11,11 @@ public class Player {
     int height = 10;
 
     int hp = 10;
-
     int speed = 6;
+
+    int score = 0;
+
+    boolean isAlive = true;
 
     public void draw(Graphics g){
         g.drawRect(x, y, width, height);

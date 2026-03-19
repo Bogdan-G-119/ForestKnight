@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 class GamePanel extends JPanel implements KeyListener {
@@ -79,45 +80,63 @@ class GamePanel extends JPanel implements KeyListener {
 
    public void paintComponent(Graphics g){
         super.paintComponent(g);
-        player.draw(g);
-        for(Enemy enemy : enemies){
-            enemy.draw(g);
-        }
+        Color originalColor = g.getColor();
+        if(player.isAlive) {
+           player.draw(g);
+       } else {
+           g.setColor(Color.RED);
+           g.fillRect(player.x, player.y, player.width, player.height);
+       }
+
+       g.setColor(originalColor);
+
+       for(Enemy enemy : enemies){
+           enemy.draw(g);
+       }
     }
 
-    public void update(){
-        if(player.hp <= 0){
-            //remove player, end game
-        }
-        if(upPressed && player.y > 0){
-            player.y -= player.speed;
-        }
+    public void update() {
+        if(player.isAlive){
+            if (player.hp <= 0){
+                player.isAlive = false;
+            }
 
-        if(leftPressed && player.x > 0){
-            player.x -= player.speed;
-        }
+            if (upPressed && player.y > 0) {
+                player.y -= player.speed;
+            }
 
-        if(downPressed && player.y < getHeight() - player.height){
-            player.y += player.speed;
-        }
+            if (leftPressed && player.x > 0) {
+                player.x -= player.speed;
+            }
 
-        if(rightPressed && player.x < getWidth() - player.width){
-            player.x += player.speed;
-        }
+            if (downPressed && player.y < getHeight() - player.height) {
+                player.y += player.speed;
+            }
 
-        for(Enemy enemy : enemies){
-            enemy.update(player);
+            if (rightPressed && player.x < getWidth() - player.width) {
+                player.x += player.speed;
+            }
 
-            if(collisionEnable(enemy)){
-                player.hp--;
+            Iterator<Enemy> iterator = enemies.iterator();
+
+            while (iterator.hasNext()) {
+                Enemy enemy = iterator.next();
+                enemy.update(player);
+
+                if (collisionEnable(enemy)) {
+                    enemy.takeDamage(player);
+                }
+
+                if(enemy.hp <= 0){
+                    enemy.isAlive = false;
+                    player.score += enemy.scoreValue;
+                    iterator.remove();
+                }
             }
         }
     }
 
     private boolean collisionEnable(Enemy enemy) {
-        return player.x < enemy.x + enemy.width &&
-                player.x + player.width > enemy.x &&
-                player.y < enemy.y + enemy.height &&
-                player.y + player.height > enemy.y;
+        return player.getBounds().intersects(enemy.getBounds());
     }
 }
