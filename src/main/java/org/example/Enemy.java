@@ -18,6 +18,7 @@ public abstract class Enemy {
     protected boolean isAlive;
     protected int scoreValue;
 
+
     public abstract void update(Player player);
 
     public abstract void draw(Graphics g);

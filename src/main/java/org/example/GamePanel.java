@@ -11,6 +11,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 class GamePanel extends JPanel implements KeyListener {
     ArrayList<Enemy> enemies = new ArrayList<>();
+    WaveManager waveManager = new WaveManager(enemies);
     boolean upPressed = false;
     boolean downPressed = false;
 
@@ -20,9 +21,13 @@ class GamePanel extends JPanel implements KeyListener {
     Player player = new Player();
 
     public GamePanel() {
+        /*
         Enemy wolf = new Wolf(100, 100);
         enemies.add(wolf);
 
+        Enemy bear = new Bear(200, 200);
+        enemies.add(bear);
+        */
         setPreferredSize(new Dimension(Game.width, Game.height));
 
         setFocusable(true);
@@ -96,7 +101,9 @@ class GamePanel extends JPanel implements KeyListener {
     }
 
     public void update() {
+        waveManager.update();
         if(player.isAlive){
+            if(player.damageCoolDown > 0) player.damageCoolDown--;
             if (player.hp <= 0){
                 player.isAlive = false;
             }
@@ -123,8 +130,9 @@ class GamePanel extends JPanel implements KeyListener {
                 Enemy enemy = iterator.next();
                 enemy.update(player);
 
-                if (collisionEnable(enemy)) {
+                if (collisionEnable(enemy) && player.damageCoolDown == 0) {
                     enemy.takeDamage(player);
+                    player.damageCoolDown = 30;
                 }
 
                 if(enemy.hp <= 0){

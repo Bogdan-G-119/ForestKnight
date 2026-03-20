@@ -17,6 +17,8 @@ public class Player {
 
     boolean isAlive = true;
 
+    int damageCoolDown = 0;
+
     public void draw(Graphics g){
         g.drawRect(x, y, width, height);
     }

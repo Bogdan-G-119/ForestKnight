@@ -2,8 +2,7 @@ package org.example;
 
 import java.awt.*;
 
-public class Wolf extends Enemy{
-
+public class KnightEnemy extends Enemy{
     @Override
     public void update(Player player) {
         if(player.x > x){
@@ -25,15 +24,15 @@ public class Wolf extends Enemy{
         g.drawRect(x, y, width, height);
     }
 
-    public Wolf(int x, int y) {
+    public KnightEnemy(int x, int y) {
         this.x = x;
         this.y = y;
-        width = 20;
-        height = 20;
+        width = 25;
+        height = 25;
         speed = 3;
         damage = 2;
-        scoreValue = 30;
-        hp = 20;
+        scoreValue = 45;
+        hp = 25;
         isAlive = true;
     }
 }
