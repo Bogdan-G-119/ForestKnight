@@ -2,12 +2,13 @@ package org.example;
 import javax.swing.JPanel;
 import java.awt.*;
 import javax.swing.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseEvent;
 
 class GamePanel extends JPanel implements KeyListener {
     ArrayList<Enemy> enemies = new ArrayList<>();
@@ -19,6 +20,8 @@ class GamePanel extends JPanel implements KeyListener {
     boolean rightPressed = false;
 
     Player player = new Player();
+
+    int mouseX, mouseY;
 
     public GamePanel() {
         /*
@@ -39,6 +42,13 @@ class GamePanel extends JPanel implements KeyListener {
         });
 
         timer.start();
+        addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                mouseX = e.getX();
+                mouseY = e.getY();
+            }
+        });
     }
 
     @Override
@@ -87,7 +97,8 @@ class GamePanel extends JPanel implements KeyListener {
         super.paintComponent(g);
         Color originalColor = g.getColor();
         if(player.isAlive) {
-           player.draw(g);
+            player.draw(g, mouseX, mouseY);
+            player.attack(enemies, mouseX, mouseY);
        } else {
            g.setColor(Color.RED);
            g.fillRect(player.x, player.y, player.width, player.height);
@@ -147,4 +158,5 @@ class GamePanel extends JPanel implements KeyListener {
     private boolean collisionEnable(Enemy enemy) {
         return player.getBounds().intersects(enemy.getBounds());
     }
+
 }
