@@ -109,6 +109,9 @@ class GamePanel extends JPanel implements KeyListener {
        for(Enemy enemy : enemies){
            enemy.draw(g);
        }
+       g.drawString("HP: " + player.hp, 10, 20);
+       g.drawString("score: " + player.score, 50, 20);
+       g.drawString("Wave: " + waveManager.waveNumber, 10, 40);
     }
 
     public void update() {
