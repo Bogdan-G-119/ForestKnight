@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 
 public class Player {
+    ArrayList<TemporaryEffect> activeEffects = new ArrayList<>();
     int x = 0;
     int y = 0;
 
@@ -22,14 +23,40 @@ public class Player {
     int attackCoolDown = 0;
 
     int damage = 5;
+    int extraDamage = 0;
+    int attackSize = 20;
+
+    public interface TemporaryEffect {
+        void update(Player player);
+    }
+
+    public void addTemporaryEffect(TemporaryEffect effect){
+        activeEffects.add(effect);
+    }
+
+    public void removeTemporaryEffect(TemporaryEffect effect){
+        activeEffects.remove(effect);
+    }
+
+    public void updateEffects() {
+        for (int i = activeEffects.size() - 1; i >= 0; i--) {
+            activeEffects.get(i).update(this);
+        }
+    }
+
+    public void tick(ArrayList<Enemy> enemies, int mouseX, int mouseY, boolean mousePressed){
+        attack(enemies, mouseX, mouseY, mousePressed);
+
+        updateEffects();
+    }
 
     public void draw(Graphics g, int mouseX, int mouseY){
         g.setColor(Color.blue);
         g.fillRect(x, y, width, height);
 
-        Rectangle attackRect = getAttackBounds(mouseX, mouseY);
+        Rectangle attackRect = getAttackBounds(mouseX, mouseY, attackSize);
 
-        if(attackCoolDown == 0){
+        if (attackCoolDown == 0){
             g.setColor(Color.BLACK);
         } else {
             g.setColor(Color.GRAY);
@@ -44,19 +71,24 @@ public class Player {
     }
 
     public void attack(ArrayList<Enemy> enemies, int mouseX, int mouseY){
-        Rectangle attackRect = getAttackBounds(mouseX, mouseY);
-        if(attackCoolDown > 0) attackCoolDown--;
-        for(Enemy enemy : enemies){
-            if(collisionEnable(enemy, attackRect) && attackCoolDown == 0){
-                enemy.hp -= damage;
-                attackCoolDown = 30;
-            }
-        }
+        attack(enemies, mouseX, mouseY, extraDamage);
     }
 
-    public Rectangle getAttackBounds(int mouseX, int mouseY){
+    public void attack(ArrayList<Enemy> enemies, int mouseX, int mouseY, int extraDamage) {
+        if (attackCoolDown == 0) {
+            Rectangle attackRect = getAttackBounds(mouseX, mouseY, attackSize);
+            for (Enemy enemy : enemies) {
+                if (collisionEnable(enemy, attackRect)) {
+                    enemy.hp -= damage + extraDamage;
+                    attackCoolDown = 30;
+                }
+            }
+        }
+        if (attackCoolDown > 0) attackCoolDown--;
+    }
+
+    public Rectangle getAttackBounds(int mouseX, int mouseY, int attackSize){
         AttackDirection dir = getAttackDirection(mouseX, mouseY);
-        int attackSize = 20;
         switch (dir){
             case UP: return new Rectangle(x, y-attackSize-height, width, attackSize);
             case DOWN: return new Rectangle(x, y+attackSize, width, attackSize);

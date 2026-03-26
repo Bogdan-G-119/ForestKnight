@@ -10,16 +10,16 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
 
-class GamePanel extends JPanel implements KeyListener {
+class GamePanel extends JPanel implements KeyListener, MouseListener {
     ArrayList<Enemy> enemies = new ArrayList<>();
-    WaveManager waveManager = new WaveManager(enemies);
+    ArrayList<PowerUp> powerUps = new ArrayList<>();
+    Player player = new Player();
+    WaveManager waveManager = new WaveManager(enemies, powerUps);
     boolean upPressed = false;
     boolean downPressed = false;
 
     boolean leftPressed = false;
     boolean rightPressed = false;
-
-    Player player = new Player();
 
     int mouseX, mouseY;
 
@@ -35,6 +35,7 @@ class GamePanel extends JPanel implements KeyListener {
 
         setFocusable(true);
         addKeyListener(this);
+        this.addMouseListener(this);
 
         Timer timer = new Timer(16, e -> {
             update();
@@ -49,6 +50,37 @@ class GamePanel extends JPanel implements KeyListener {
                 mouseY = e.getY();
             }
         });
+    }
+
+    boolean mousePressed = false;
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            mousePressed = true;
+        }
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            mousePressed = false;
+        }
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
     }
 
     @Override
@@ -109,12 +141,28 @@ class GamePanel extends JPanel implements KeyListener {
        for(Enemy enemy : enemies){
            enemy.draw(g);
        }
-       g.drawString("HP: " + player.hp, 10, 20);
-       g.drawString("score: " + player.score, 50, 20);
-       g.drawString("Wave: " + waveManager.waveNumber, 10, 40);
+
+       for(PowerUp power : powerUps){
+           if(!power.isCollected){
+               power.draw(g);
+           }
+       }
+
+       g.setColor(originalColor);
+       g.drawString("HP: " + player.hp, getWidth()/4 - 70, 20);
+       g.drawString("score: " + player.score, getWidth()/4 * 2 - 70, 20);
+       g.drawString("Wave: " + waveManager.waveNumber, getWidth()/4 * 3 - 70, 20);
+       g.drawString("Speed: " + player.speed, getWidth() - 70, 20);
+
+       for(PowerUp power : powerUps){
+           if(!power.isCollected){
+               power.draw(g);
+           }
+       }
     }
 
     public void update() {
+        player.tick(enemies, mouseX, mouseY, mousePressed);
         waveManager.update();
         if(player.isAlive){
             if(player.damageCoolDown > 0) player.damageCoolDown--;
@@ -153,6 +201,11 @@ class GamePanel extends JPanel implements KeyListener {
                     enemy.isAlive = false;
                     player.score += enemy.scoreValue;
                     iterator.remove();
+                }
+            }
+            for(PowerUp power : powerUps){
+                if(!power.isCollected){
+                    power.checkCollision(player);
                 }
             }
         }

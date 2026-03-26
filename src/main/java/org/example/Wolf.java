@@ -6,18 +6,10 @@ public class Wolf extends Enemy{
 
     @Override
     public void update(Player player) {
-        if(player.x > x){
-            x += speed;
-        }
-        if(player.y > y){
-            y += speed;
-        }
-        if(player.x < x){
-            x -= speed;
-        }
-        if(player.y < y){
-            y -= speed;
-        }
+        if(player.x > x){x += speed;}
+        if(player.y > y){y += speed;}
+        if(player.x < x){x -= speed;}
+        if(player.y < y){y -= speed;}
     }
 
     @Override
