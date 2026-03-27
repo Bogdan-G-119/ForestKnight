@@ -6,11 +6,11 @@ import java.util.Random;
 public class WaveManager {
     ArrayList<Enemy> enemies;
     ArrayList<PowerUp> powerUps;
+    int countOfWaves = 20;
     int waveNumber;
     boolean waveInProgress;
     Random random = new Random();
-    EnemyType randomType = EnemyType.values()[random.nextInt(EnemyType.values().length)];
-    PowerType randomPower = PowerType.values()[random.nextInt(PowerType.values().length)];
+
     public WaveManager(ArrayList<Enemy> enemies, ArrayList<PowerUp> powerUps){
         this.enemies = enemies;
         this.powerUps = powerUps;
@@ -19,7 +19,7 @@ public class WaveManager {
 
     public void update() {
         if(enemies.isEmpty() && !waveInProgress){
-            if(waveNumber < 3) waveNumber++;
+            if(waveNumber < countOfWaves) waveNumber++;
             spawnWave();
             waveInProgress = true;
         }
@@ -29,18 +29,15 @@ public class WaveManager {
     }
 
     private void spawnWave() {
-        if(waveNumber == 1){
-            for(int i = 0; i < 5; i++){
-                spawnEnemy(EnemyType.WOLF);
+        for(int i = 0; i<countOfWaves; i++){
+            if(waveNumber == i){
+                for(int j = 0; j < waveNumber; j++){
+                    EnemyType randomType = EnemyType.values()[random.nextInt(EnemyType.values().length)];
+                    spawnEnemy(randomType);
+                    PowerType randomPower = PowerType.values()[random.nextInt(PowerType.values().length)];
+                    spawnPowerUp(randomPower);
+                }
             }
-            spawnPowerUp(PowerType.DAMAGE);
-            spawnPowerUp(PowerType.HP);
-            spawnPowerUp(PowerType.SPEED);
-            spawnPowerUp(PowerType.SWORD);
-        }
-        if(waveNumber == 2){
-            spawnEnemy(randomType);
-            spawnPowerUp(randomPower);
         }
     }
 
@@ -72,22 +69,9 @@ public class WaveManager {
     }
 
     private int[] getRandomSpawnPositionForPower(){
-        int x, y;
-        int barier = 20;
-        int side = random.nextInt(4);
-        if(side == 0){
-            x = barier;
-            y = random.nextInt(Game.height - barier);
-        } else if(side == 1){
-            x = Game.width - barier;
-            y = random.nextInt(Game.height - barier);
-        } else if(side == 2){
-            x = random.nextInt(Game.width - barier);
-            y = 0;
-        } else {
-            x = random.nextInt(Game.width - barier);
-            y = Game.height - barier;
-        }
+        int barrier = 20;
+        int x = random.nextInt(Game.width - barrier);
+        int y = random.nextInt(Game.height - barrier);
         return new int[]{x, y};
     }
 

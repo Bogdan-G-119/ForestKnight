@@ -1,8 +1,8 @@
 package org.example;
 import javax.swing.*;
 public class Game extends JFrame{
-    static int width = 300;
-    static int height = 300;
+    static int width = 600;
+    static int height = 600;
     public static void start(){
         JFrame frame = new JFrame("Forest Knight");
 

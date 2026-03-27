@@ -24,13 +24,6 @@ class GamePanel extends JPanel implements KeyListener, MouseListener {
     int mouseX, mouseY;
 
     public GamePanel() {
-        /*
-        Enemy wolf = new Wolf(100, 100);
-        enemies.add(wolf);
-
-        Enemy bear = new Bear(200, 200);
-        enemies.add(bear);
-        */
         setPreferredSize(new Dimension(Game.width, Game.height));
 
         setFocusable(true);
@@ -130,7 +123,6 @@ class GamePanel extends JPanel implements KeyListener, MouseListener {
         Color originalColor = g.getColor();
         if(player.isAlive) {
             player.draw(g, mouseX, mouseY);
-            player.attack(enemies, mouseX, mouseY);
        } else {
            g.setColor(Color.RED);
            g.fillRect(player.x, player.y, player.width, player.height);
@@ -153,17 +145,12 @@ class GamePanel extends JPanel implements KeyListener, MouseListener {
        g.drawString("score: " + player.score, getWidth()/4 * 2 - 70, 20);
        g.drawString("Wave: " + waveManager.waveNumber, getWidth()/4 * 3 - 70, 20);
        g.drawString("Speed: " + player.speed, getWidth() - 70, 20);
-
-       for(PowerUp power : powerUps){
-           if(!power.isCollected){
-               power.draw(g);
-           }
-       }
     }
 
     public void update() {
         player.tick(enemies, mouseX, mouseY, mousePressed);
         waveManager.update();
+
         if(player.isAlive){
             if(player.damageCoolDown > 0) player.damageCoolDown--;
             if (player.hp <= 0){

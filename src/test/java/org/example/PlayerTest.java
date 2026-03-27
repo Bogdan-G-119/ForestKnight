@@ -41,7 +41,7 @@ public class PlayerTest {
         ArrayList<Enemy> enemies = new ArrayList<>();
         enemies.add(enemy);
 
-        player.attack(enemies, 100, 50);
+        player.attack(enemies, 100, 50, true);
 
         assertTrue(enemy.hp < initialHp);
     }
@@ -57,10 +57,10 @@ public class PlayerTest {
         ArrayList<Enemy> enemies = new ArrayList<>();
         enemies.add(enemy);
 
-        player.attack(enemies, 100, 50);
+        player.attack(enemies, 100, 50, true);
         int hpAfterFirstHit = enemy.hp;
 
-        player.attack(enemies, 100, 50);
+        player.attack(enemies, 100, 50, true);
 
         assertEquals(hpAfterFirstHit, enemy.hp);
     }

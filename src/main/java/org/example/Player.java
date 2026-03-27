@@ -22,9 +22,9 @@ public class Player {
     int damageCoolDown = 0;
     int attackCoolDown = 0;
 
-    int damage = 5;
+    int damage = 3;
     int extraDamage = 0;
-    int attackSize = 20;
+    int attackSize = 30;
 
     public interface TemporaryEffect {
         void update(Player player);
@@ -70,19 +70,19 @@ public class Player {
         return new Rectangle(x, y, width, height);
     }
 
-    public void attack(ArrayList<Enemy> enemies, int mouseX, int mouseY){
-        attack(enemies, mouseX, mouseY, extraDamage);
+    public void attack(ArrayList<Enemy> enemies, int mouseX, int mouseY, boolean mousePressed){
+        attack(enemies, mouseX, mouseY, extraDamage, mousePressed);
     }
 
-    public void attack(ArrayList<Enemy> enemies, int mouseX, int mouseY, int extraDamage) {
-        if (attackCoolDown == 0) {
+    public void attack(ArrayList<Enemy> enemies, int mouseX, int mouseY, int extraDamage, boolean mousePressed) {
+        if(mousePressed && attackCoolDown == 0) {
             Rectangle attackRect = getAttackBounds(mouseX, mouseY, attackSize);
             for (Enemy enemy : enemies) {
                 if (collisionEnable(enemy, attackRect)) {
                     enemy.hp -= damage + extraDamage;
-                    attackCoolDown = 30;
                 }
             }
+            attackCoolDown = 30;
         }
         if (attackCoolDown > 0) attackCoolDown--;
     }
@@ -91,9 +91,9 @@ public class Player {
         AttackDirection dir = getAttackDirection(mouseX, mouseY);
         switch (dir){
             case UP: return new Rectangle(x, y-attackSize-height, width, attackSize);
-            case DOWN: return new Rectangle(x, y+attackSize, width, attackSize);
+            case DOWN: return new Rectangle(x, y+2*height, width, attackSize);
             case LEFT: return new Rectangle(x-attackSize-width, y, attackSize, height);
-            case RIGHT: return new Rectangle(x+attackSize, y, attackSize, height);
+            case RIGHT: return new Rectangle(x+2*width, y, attackSize, height);
         }
         return new Rectangle(x, y, width, height);
     }
