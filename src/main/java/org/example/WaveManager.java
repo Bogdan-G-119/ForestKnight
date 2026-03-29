@@ -6,7 +6,7 @@ import java.util.Random;
 public class WaveManager {
     ArrayList<Enemy> enemies;
     ArrayList<PowerUp> powerUps;
-    int countOfWaves = 20;
+    int countOfWaves = 5;
     int waveNumber;
     boolean waveInProgress;
     Random random = new Random();
@@ -31,7 +31,7 @@ public class WaveManager {
     private void spawnWave() {
         for(int i = 0; i<countOfWaves; i++){
             if(waveNumber == i){
-                for(int j = 0; j < waveNumber; j++){
+                for(int j = 0; j <= waveNumber; j++){
                     EnemyType randomType = EnemyType.values()[random.nextInt(EnemyType.values().length)];
                     spawnEnemy(randomType);
                     PowerType randomPower = PowerType.values()[random.nextInt(PowerType.values().length)];
