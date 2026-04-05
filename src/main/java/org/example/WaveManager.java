@@ -37,6 +37,8 @@ public class WaveManager {
                     PowerType randomPower = PowerType.values()[random.nextInt(PowerType.values().length)];
                     spawnPowerUp(randomPower);
                 }
+                spawnEnemy(EnemyType.WOLF);
+                spawnEnemy(EnemyType.WOLF);
             }
         }
     }

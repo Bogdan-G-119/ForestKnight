@@ -81,6 +81,8 @@ public class Player {
             for (Enemy enemy : enemies) {
                 if (collisionEnable(enemy, attackRect)) {
                     enemy.hp -= damage + extraDamage;
+                    enemy.applyKnockBack(x, y, 5);
+                    enemy.hitFlashTime = 5;
                 }
             }
             attackCoolDown = 30;
