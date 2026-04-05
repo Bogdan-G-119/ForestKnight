@@ -55,14 +55,15 @@ public class Player {
         g.fillRect(x, y, width, height);
 
         Rectangle attackRect = getAttackBounds(mouseX, mouseY, attackSize);
+        float progress = getAttackProgress();
 
-        if (attackCoolDown == 0){
-            g.setColor(Color.BLACK);
-        } else {
-            g.setColor(Color.GRAY);
-        }
+        int grayValue = (int)(progress * 255);
+        grayValue = Math.max(50, grayValue);
 
+        g.setColor(new Color(grayValue, grayValue, grayValue));
         g.fillRect(attackRect.x, attackRect.y, attackRect.width, attackRect.height);
+        g.setColor(Color.BLACK);
+        g.drawRect(attackRect.x, attackRect.y, attackRect.width, attackRect.height);
         g.drawRect(x, y, width, height);
     }
 
@@ -115,5 +116,9 @@ public class Player {
 
     private boolean collisionEnable(Enemy enemy, Rectangle attackRect) {
         return enemy.getBounds().intersects(attackRect);
+    }
+
+    public float getAttackProgress(){
+        return 1f - (attackCoolDown/30f);
     }
 }
