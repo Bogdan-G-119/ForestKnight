@@ -2,7 +2,7 @@ package org.example;
 
 import java.awt.*;
 
-public class Bear extends Enemy{
+public class EnemyBear extends Enemy{
     @Override
     public void update(Player player) {
         if(hitFlashTime > 0) hitFlashTime--;
@@ -33,7 +33,7 @@ public class Bear extends Enemy{
         g.fillRect(x, y, width, height);
     }
 
-    public Bear(int x, int y) {
+    public EnemyBear(int x, int y) {
         this.x = x;
         this.y = y;
         width = 30;

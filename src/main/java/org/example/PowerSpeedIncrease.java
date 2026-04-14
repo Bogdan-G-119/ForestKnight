@@ -2,10 +2,10 @@ package org.example;
 
 import java.awt.*;
 
-public class SpeedIncreasePower extends PowerUp{
+public class PowerSpeedIncrease extends PowerUp{
     int extraSpeed;
     int duration;
-    public SpeedIncreasePower(int x, int y, int extraSpeed, int duration) {
+    public PowerSpeedIncrease(int x, int y, int extraSpeed, int duration) {
         super(x, y);
         this.extraSpeed = extraSpeed;
         this.duration = duration;

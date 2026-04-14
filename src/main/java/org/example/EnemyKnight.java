@@ -2,7 +2,7 @@ package org.example;
 
 import java.awt.*;
 
-public class KnightEnemy extends Enemy{
+public class EnemyKnight extends Enemy{
     @Override
     public void update(Player player) {
         if(hitFlashTime > 0) hitFlashTime--;
@@ -33,7 +33,7 @@ public class KnightEnemy extends Enemy{
         g.fillRect(x, y, width, height);
     }
 
-    public KnightEnemy(int x, int y) {
+    public EnemyKnight(int x, int y) {
         this.x = x;
         this.y = y;
         width = 25;

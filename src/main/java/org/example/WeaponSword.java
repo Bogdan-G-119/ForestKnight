@@ -3,7 +3,8 @@ package org.example;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class SwordWeapon extends Weapon {
+public class WeaponSword extends Weapon {
+
     @Override
     public void attack(Player player, ArrayList<Enemy> enemies, int mouseX, int mouseY, boolean mousePressed){
 

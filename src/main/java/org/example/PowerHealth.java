@@ -2,10 +2,10 @@ package org.example;
 
 import java.awt.*;
 
-public class HealthPower extends PowerUp{
+public class PowerHealth extends PowerUp{
     int extraHp;
 
-    public HealthPower(int x, int y, int extraHp) {
+    public PowerHealth(int x, int y, int extraHp) {
         super(x, y);
         this.extraHp = extraHp;
     }

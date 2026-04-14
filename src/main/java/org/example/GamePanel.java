@@ -6,13 +6,12 @@ import java.awt.event.*;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
 
 class GamePanel extends JPanel implements KeyListener, MouseListener {
     ArrayList<Enemy> enemies = new ArrayList<>();
     ArrayList<PowerUp> powerUps = new ArrayList<>();
+    ArrayList<Arrow> arrows = new ArrayList<>();
     Player player = new Player();
     WaveManager waveManager = new WaveManager(enemies, powerUps);
     boolean upPressed = false;
@@ -20,10 +19,10 @@ class GamePanel extends JPanel implements KeyListener, MouseListener {
 
     boolean leftPressed = false;
     boolean rightPressed = false;
-
     int mouseX, mouseY;
 
     public GamePanel() {
+        player.crossbow = new WeaponCrossbow(arrows);
         setPreferredSize(new Dimension(Game.width, Game.height));
 
         setFocusable(true);
@@ -45,7 +44,7 @@ class GamePanel extends JPanel implements KeyListener, MouseListener {
         });
     }
 
-    boolean mousePressed = false;
+    boolean mouseClicked = false;
 
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -55,15 +54,13 @@ class GamePanel extends JPanel implements KeyListener, MouseListener {
     @Override
     public void mousePressed(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1) {
-            mousePressed = true;
+            mouseClicked = true;
         }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1) {
-            mousePressed = false;
-        }
+
     }
 
     @Override
@@ -84,6 +81,14 @@ class GamePanel extends JPanel implements KeyListener, MouseListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
+
+        if(key == KeyEvent.VK_1){
+            player.currentWeapon = player.sword;
+        }
+        if(key == KeyEvent.VK_2){
+            player.currentWeapon = player.crossbow;
+        }
+
         if(key == KeyEvent.VK_W){
             upPressed = true;
         }
@@ -140,18 +145,26 @@ class GamePanel extends JPanel implements KeyListener, MouseListener {
            }
        }
 
+       for(Arrow arrow : arrows){
+           arrow.draw(g);
+       }
+
        g.setColor(originalColor);
-       g.drawString("HP: " + player.hp, getWidth()/4 - 70, 20);
-       g.drawString("score: " + player.score, getWidth()/4 * 2 - 70, 20);
-       g.drawString("Wave: " + waveManager.waveNumber, getWidth()/4 * 3 - 70, 20);
-       g.drawString("Speed: " + player.speed, getWidth() - 70, 20);
+       g.drawString("HP: " + player.hp, getWidth()/5 - 70, 20);
+       g.drawString("score: " + player.score, getWidth()/5 * 2 - 70, 20);
+       g.drawString("Wave: " + waveManager.waveNumber, getWidth()/5 * 3 - 70, 20);
+       g.drawString("Speed: " + player.speed, getWidth()/5 * 4 - 70, 20);
+       g.drawString("Arrows: " + player.arrowsLeft, getWidth() - 70, 20);
     }
 
     public void update() {
-        player.tick(enemies, mouseX, mouseY, mousePressed);
-        waveManager.update();
-
         if(player.isAlive){
+            if(player.arrowsLeft > 30){
+                player.arrowsLeft = 30;
+            }
+            player.attack(enemies, mouseX, mouseY, mouseClicked);
+            waveManager.update();
+
             if(player.damageCoolDown > 0) player.damageCoolDown--;
             if (player.hp <= 0){
                 player.isAlive = false;
@@ -187,6 +200,7 @@ class GamePanel extends JPanel implements KeyListener, MouseListener {
                 if(enemy.hp <= 0){
                     enemy.isAlive = false;
                     player.score += enemy.scoreValue;
+                    player.arrowsLeft += 5;
                     iterator.remove();
                 }
             }
@@ -195,6 +209,22 @@ class GamePanel extends JPanel implements KeyListener, MouseListener {
                     power.checkCollision(player);
                 }
             }
+            Iterator<Arrow> arrowIterator = arrows.iterator();
+
+            while(arrowIterator.hasNext()){
+                Arrow arrow = arrowIterator.next();
+                arrow.update();
+
+                for(Enemy enemy : enemies){
+                    if(arrow.getBounds().intersects(enemy.getBounds())){
+                        enemy.hp -= 5;
+                        enemy.hitFlashTime = 5;
+                        arrowIterator.remove();
+                        break;
+                    }
+                }
+            }
+            mouseClicked = false;
         }
     }
 

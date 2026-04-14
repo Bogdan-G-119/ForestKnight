@@ -2,9 +2,9 @@ package org.example;
 
 import java.awt.*;
 
-public class SwordPower extends PowerUp{
+public class PowerSword extends PowerUp{
     int extraSize;
-    public SwordPower(int x, int y, int extraSize) {
+    public PowerSword(int x, int y, int extraSize) {
         super(x, y);
         this.extraSize = extraSize;
     }

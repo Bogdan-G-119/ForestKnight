@@ -26,6 +26,15 @@ public class Player {
     int extraDamage = 0;
     int attackSize = 30;
 
+    Weapon currentWeapon;
+    Weapon sword = new WeaponSword();
+    Weapon crossbow;
+    int arrowsLeft = 20;
+
+    public Player() {
+        currentWeapon = sword;
+    }
+
     public interface TemporaryEffect {
         void update(Player player);
     }
@@ -44,16 +53,16 @@ public class Player {
         }
     }
 
-    public void tick(ArrayList<Enemy> enemies, int mouseX, int mouseY, boolean mousePressed){
-        attack(enemies, mouseX, mouseY, mousePressed);
+    /*public void tick(Player player, ArrayList<Enemy> enemies, int mouseX, int mouseY){
+        currentWeapon.attack(player, enemies, mouseX, mouseY);
 
         updateEffects();
-    }
+    }*/
 
     public void draw(Graphics g, int mouseX, int mouseY){
         g.setColor(Color.blue);
         g.fillRect(x, y, width, height);
-
+        if(currentWeapon == sword){
         Rectangle attackRect = getAttackBounds(mouseX, mouseY, attackSize);
         float progress = getAttackProgress();
 
@@ -65,6 +74,7 @@ public class Player {
         g.setColor(Color.BLACK);
         g.drawRect(attackRect.x, attackRect.y, attackRect.width, attackRect.height);
         g.drawRect(x, y, width, height);
+        }
     }
 
     public Rectangle getBounds(){
@@ -72,22 +82,7 @@ public class Player {
     }
 
     public void attack(ArrayList<Enemy> enemies, int mouseX, int mouseY, boolean mousePressed){
-        attack(enemies, mouseX, mouseY, extraDamage, mousePressed);
-    }
-
-    public void attack(ArrayList<Enemy> enemies, int mouseX, int mouseY, int extraDamage, boolean mousePressed) {
-        if(mousePressed && attackCoolDown == 0) {
-            Rectangle attackRect = getAttackBounds(mouseX, mouseY, attackSize);
-            for (Enemy enemy : enemies) {
-                if (collisionEnable(enemy, attackRect)) {
-                    enemy.hp -= damage + extraDamage;
-                    enemy.applyKnockBack(x, y, 5);
-                    enemy.hitFlashTime = 5;
-                }
-            }
-            attackCoolDown = 30;
-        }
-        if (attackCoolDown > 0) attackCoolDown--;
+        currentWeapon.attack(this, enemies, mouseX, mouseY, mousePressed);
     }
 
     public Rectangle getAttackBounds(int mouseX, int mouseY, int attackSize){

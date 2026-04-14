@@ -1,6 +1,5 @@
 package org.example;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 public class WaveManager {
@@ -84,13 +83,13 @@ public class WaveManager {
 
         switch (type) {
             case WOLF:
-                enemies.add(new Wolf(x, y));
+                enemies.add(new EnemyWolf(x, y));
                 break;
             case BEAR:
-                enemies.add(new Bear(x, y));
+                enemies.add(new EnemyBear(x, y));
                 break;
             case KNIGHT_ENEMY:
-                enemies.add(new KnightEnemy(x, y));
+                enemies.add(new EnemyKnight(x, y));
                 break;
         }
     }
@@ -102,16 +101,16 @@ public class WaveManager {
 
         switch (type) {
             case DAMAGE:
-                powerUps.add(new DamageIncreasePower(x, y, 4));
+                powerUps.add(new PowerDamageIncrease(x, y, 4));
                 break;
             case HP:
-                powerUps.add(new HealthPower(x, y, 5));
+                powerUps.add(new PowerHealth(x, y, 5));
                 break;
             case SPEED:
-                powerUps.add(new SpeedIncreasePower(x, y, 1, 300));
+                powerUps.add(new PowerSpeedIncrease(x, y, 1, 300));
                 break;
             case SWORD:
-                powerUps.add(new SwordPower(x, y, 10));
+                powerUps.add(new PowerSword(x, y, 10));
                 break;
         }
     }

@@ -1,10 +1,9 @@
 package org.example;
 import java.awt.*;
-import java.util.ArrayList;
 
-public class DamageIncreasePower extends PowerUp {
+public class PowerDamageIncrease extends PowerUp {
     int extraDamage;
-    public DamageIncreasePower(int x, int y, int extraDamage){super(x, y); this.extraDamage = extraDamage;}
+    public PowerDamageIncrease(int x, int y, int extraDamage){super(x, y); this.extraDamage = extraDamage;}
     @Override
     protected Color getColor() {
         return Color.RED;
