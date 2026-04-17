@@ -8,6 +8,10 @@ public abstract class Enemy {
     protected int y = 0;
     protected int width = 0;
     protected int height = 0;
+
+    protected int drawWidth = 0;
+    protected int drawHeight = 0;
+
     protected int speed = 2;
     protected int hp = 0;
     protected int damage;
@@ -18,6 +22,11 @@ public abstract class Enemy {
     int knockBackTime = 0;
     float knockBackResistance;
     int hitFlashTime = 0;
+    Image image;
+    double angleToPlayer;
+    double angle(Player player){
+        return Math.atan2(player.y - y, player.x - x) + Math.PI / 2;
+    }
 
     public abstract void update(Player player);
 

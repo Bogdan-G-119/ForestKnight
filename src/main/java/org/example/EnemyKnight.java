@@ -1,5 +1,6 @@
 package org.example;
 
+import javax.swing.*;
 import java.awt.*;
 
 public class EnemyKnight extends Enemy{
@@ -20,17 +21,26 @@ public class EnemyKnight extends Enemy{
         if(player.y > y){y += speed;}
         if(player.x < x){x -= speed;}
         if(player.y < y){y -= speed;}
+        angleToPlayer = angle(player);
     }
 
     @Override
     public void draw(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
+
+        int centerX = x + width / 2;
+        int centerY = y + height / 2;
+
+        g2.rotate(angleToPlayer, centerX, centerY);
+
+        g2.drawImage(image, x - (drawWidth - width)/2, y - (drawHeight - height)/2, drawWidth, drawHeight, null);
+
         if(hitFlashTime > 0 && hitFlashTime % 2 == 0){
             g.setColor(Color.RED);
         } else {
             g.setColor(Color.CYAN);
         }
-        g.drawRect(x, y, width, height);
-        g.fillRect(x, y, width, height);
+        g2.rotate(-angleToPlayer, centerX, centerY);
     }
 
     public EnemyKnight(int x, int y) {
@@ -38,11 +48,14 @@ public class EnemyKnight extends Enemy{
         this.y = y;
         width = 25;
         height = 25;
+        drawWidth = width*3;
+        drawHeight = height*3;
         speed = 3;
         damage = 2;
         scoreValue = 45;
         hp = 25;
         isAlive = true;
         knockBackResistance = 0.8F;
+        image = new ImageIcon(getClass().getResource("/Knight.png")).getImage();
     }
 }

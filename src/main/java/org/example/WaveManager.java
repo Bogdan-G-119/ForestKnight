@@ -37,7 +37,8 @@ public class WaveManager {
                     spawnPowerUp(randomPower);
                 }
                 spawnEnemy(EnemyType.WOLF);
-                spawnEnemy(EnemyType.WOLF);
+                spawnEnemy(EnemyType.BEAR);
+                spawnEnemy(EnemyType.KNIGHT_ENEMY);
             }
         }
     }

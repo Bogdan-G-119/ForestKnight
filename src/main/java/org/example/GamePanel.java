@@ -149,12 +149,23 @@ class GamePanel extends JPanel implements KeyListener, MouseListener {
            arrow.draw(g);
        }
 
-       g.setColor(originalColor);
+       /*g.setColor(originalColor);
        g.drawString("HP: " + player.hp, getWidth()/5 - 70, 20);
        g.drawString("score: " + player.score, getWidth()/5 * 2 - 70, 20);
        g.drawString("Wave: " + waveManager.waveNumber, getWidth()/5 * 3 - 70, 20);
        g.drawString("Speed: " + player.speed, getWidth()/5 * 4 - 70, 20);
-       g.drawString("Arrows: " + player.arrowsLeft, getWidth() - 70, 20);
+       g.drawString("Arrows: " + player.arrowsLeft, getWidth() - 70, 20);*/
+
+       g.setColor(Color.DARK_GRAY);
+       g.fillRect(10, 10, 200, 80);
+
+       g.setColor(Color.WHITE);
+       g.drawString("HP: " + player.hp, 20, 30);
+       g.drawString("Arrows: " + player.arrowsLeft, 20, 50);
+
+       g.drawRect(10, getHeight() - 60, 100, 50);
+       g.drawString("1: Sword", 15, getHeight() - 40);
+       g.drawString("2: Bow", 15, getHeight() - 20);
     }
 
     public void update() {

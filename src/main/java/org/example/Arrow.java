@@ -1,5 +1,6 @@
 package org.example;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -8,8 +9,16 @@ public class Arrow {
     double dx, dy;
 
     int size = 5;
+    int drawWidth = size*10;
+    int drawHeight = size*10;
     int speed = 10;
     boolean isAlive = true;
+    Image image;
+
+    double angle(){
+        return Math.atan2(dy, dx) + Math.PI / 2;
+    }
+//    double angleToPlayer = angle();
 
     public Arrow(int startX, int startY, int targetX, int targetY){
         this.x = startX;
@@ -23,6 +32,10 @@ public class Arrow {
 
         dx = (dirX / length) * speed;
         dy = (dirY / length) * speed;
+        image = new ImageIcon(getClass().getResource("/Arrow.png")).getImage();
+        if(image == null){
+            System.out.println("IMAGE NOT FOUND");
+        }
     }
 
     public void update(){
@@ -31,8 +44,16 @@ public class Arrow {
     }
 
     public void draw(Graphics g){
-        g.setColor(Color.BLACK);
-        g.fillRect((int)x, (int)y, size, size);
+        Graphics2D g2 = (Graphics2D) g;
+
+        int centerX = (int) (x + size / 2);
+        int centerY = (int) (y + size / 2);
+
+        g2.rotate(angle(), centerX, centerY);
+
+        g2.drawImage(image, (int) (x - (drawWidth - size)/2), (int) (y - (drawHeight - size)/2), drawWidth, drawHeight, null);
+
+        g2.rotate(-angle(), centerX, centerY);
     }
 
     public Rectangle getBounds(){
