@@ -6,8 +6,10 @@ public abstract class PowerUp {
     int x, y;
     int width = 10;
     int height = 10;
+    int drawWidth = width*4;
+    int drawHeight = height*4;
     boolean isCollected = false;
-
+    Image image;
     public PowerUp(int x, int y){
         this.x = x;
         this.y = y;

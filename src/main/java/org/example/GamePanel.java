@@ -20,7 +20,7 @@ class GamePanel extends JPanel implements KeyListener, MouseListener {
     boolean leftPressed = false;
     boolean rightPressed = false;
     int mouseX, mouseY;
-
+    Image background;
     public GamePanel() {
         player.crossbow = new WeaponCrossbow(arrows);
         setPreferredSize(new Dimension(Game.width, Game.height));
@@ -42,6 +42,7 @@ class GamePanel extends JPanel implements KeyListener, MouseListener {
                 mouseY = e.getY();
             }
         });
+        background = new ImageIcon(getClass().getResource("/BG.jpg")).getImage();
     }
 
     boolean mouseClicked = false;
@@ -84,9 +85,11 @@ class GamePanel extends JPanel implements KeyListener, MouseListener {
 
         if(key == KeyEvent.VK_1){
             player.currentWeapon = player.sword;
+            player.image = new ImageIcon(getClass().getResource("/Player.png")).getImage();
         }
         if(key == KeyEvent.VK_2){
             player.currentWeapon = player.crossbow;
+            player.image = new ImageIcon(getClass().getResource("/PlayerWithBow.png")).getImage();
         }
 
         if(key == KeyEvent.VK_W){
@@ -125,6 +128,7 @@ class GamePanel extends JPanel implements KeyListener, MouseListener {
 
    public void paintComponent(Graphics g){
         super.paintComponent(g);
+        g.drawImage(background, 0, 0, getWidth(), getHeight(), null);
         Color originalColor = g.getColor();
         if(player.isAlive) {
             player.draw(g, mouseX, mouseY);
@@ -170,6 +174,7 @@ class GamePanel extends JPanel implements KeyListener, MouseListener {
 
     public void update() {
         if(player.isAlive){
+            player.playerAngle = player.angle(mouseX, mouseY);
             if(player.arrowsLeft > 30){
                 player.arrowsLeft = 30;
             }
