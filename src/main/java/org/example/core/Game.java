@@ -1,4 +1,5 @@
-package org.example;
+package org.example.core;
+
 import javax.swing.*;
 public class Game extends JFrame{
     static int width = 780;

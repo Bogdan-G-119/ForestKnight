@@ -1,4 +1,4 @@
-package org.example;
+package org.example.entities;
 
 import java.awt.*;
 import java.awt.Rectangle;
@@ -20,11 +20,16 @@ public abstract class Enemy {
     private double knockBackX = 0;
     private double knockBackY = 0;
     int knockBackTime = 0;
-    float knockBackResistance;
     int hitFlashTime = 0;
-    Image image;
     double angleToPlayer;
     private boolean deathHandled = false;
+
+    protected Image enemyImage;
+    protected float knockBackResistance;
+    public Enemy(Image image, float knockBackResistance) {
+        this.enemyImage = image;
+        this.knockBackResistance = knockBackResistance;
+    }
 
     double angle(Player player){
         return Math.atan2(player.getY() - y, player.getX() - x) + Math.PI / 2;
@@ -47,7 +52,7 @@ public abstract class Enemy {
 
         g2.rotate(angleToPlayer, centerX, centerY);
 
-        g2.drawImage(image, x - (drawWidth - width)/2, y - (drawHeight - height)/2, drawWidth, drawHeight, null);
+        g2.drawImage(enemyImage, x - (drawWidth - width)/2, y - (drawHeight - height)/2, drawWidth, drawHeight, null);
 
         g2.rotate(-angleToPlayer, centerX, centerY);
     }

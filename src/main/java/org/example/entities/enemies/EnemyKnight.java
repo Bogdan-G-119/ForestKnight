@@ -1,11 +1,13 @@
-package org.example;
+package org.example.entities.enemies;
+
+import org.example.entities.Enemy;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.Objects;
 
-public class EnemyKnight extends Enemy{
+public class EnemyKnight extends Enemy {
     public EnemyKnight(int x, int y) {
+        super(new ImageIcon(Objects.requireNonNull(EnemyWolf.class.getResource("/Knight.png"))).getImage(), 0.8F);
         this.x = x;
         this.y = y;
         width = 25;
@@ -17,7 +19,5 @@ public class EnemyKnight extends Enemy{
         scoreValue = 45;
         hp = 25;
         isAlive = true;
-        knockBackResistance = 0.8F;
-        image = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Knight.png"))).getImage();
     }
 }

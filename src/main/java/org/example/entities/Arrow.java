@@ -1,8 +1,11 @@
-package org.example;
+package org.example.entities;
+
+import org.example.entities.Enemy;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Arrow {
     double x, y;
@@ -32,7 +35,7 @@ public class Arrow {
 
         dx = (dirX / length) * speed;
         dy = (dirY / length) * speed;
-        image = new ImageIcon(getClass().getResource("/Arrow.png")).getImage();
+        image = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Arrow.png"))).getImage();
         if(image == null){
             System.out.println("IMAGE NOT FOUND");
         }
@@ -44,6 +47,7 @@ public class Arrow {
         for (Enemy enemy : enemies) {
             if (getBounds().intersects(enemy.getBounds())) {
                 enemy.takeDamage(5);
+                enemy.applyKnockBack((int) x, (int)y, 10);
                 return true;
             }
         }

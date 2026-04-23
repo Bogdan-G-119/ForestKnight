@@ -1,4 +1,14 @@
-package org.example;
+package org.example.core;
+
+import org.example.entities.Enemy;
+import org.example.entities.enemies.EnemyBear;
+import org.example.entities.enemies.EnemyKnight;
+import org.example.entities.enemies.EnemyWolf;
+import org.example.items.PowerUp;
+import org.example.items.powerUps.PowerDamageIncrease;
+import org.example.items.powerUps.PowerHealth;
+import org.example.items.powerUps.PowerSpeedIncrease;
+import org.example.items.powerUps.PowerSword;
 
 import java.util.ArrayList;
 import java.util.Random;

@@ -1,4 +1,9 @@
-package org.example;
+package org.example.entities;
+
+import org.example.core.GameContext;
+import org.example.weapons.Weapon;
+import org.example.weapons.WeaponSword;
+import org.example.input.InputState;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,31 +28,32 @@ public class Player {
 
     boolean isAlive = true;
 
-    int damageCoolDown = 0;
-    int attackCoolDown = 0;
+    private int damageCoolDown = 0;
+    private int attackCoolDown = 0;
 
-    int damage = 3;
+    private int damage = 3;
     int extraDamage = 0;
-    int attackSize = 30;
+    private int attackSize = 30;
 
-    Weapon currentWeapon;
-    Weapon sword = new WeaponSword();
-    Weapon crossbow;
-    int arrowsLeft = 20;
+    private Weapon currentWeapon;
+    private int arrowsLeft = 20;
     double playerAngle;
     Image image = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Player.png"))).getImage();
     public int getX() { return x; }
     public int getY() { return y; }
     public int getHP() { return hp; }
+    public int getDamage() { return damage; }
     public int getSpeed() { return speed; }
     public boolean isAlive() { return isAlive; }
-
-    public Player() {currentWeapon = sword;}
+    public int getArrowsLeft() { return arrowsLeft; }
+    public int getAttackSize(){return attackSize;}
+    public Player() {}
+    public Player(Weapon weapon) {currentWeapon = weapon;}
     public Player(int x, int y) {
         this.x = x;
         this.y = y;
-        currentWeapon = sword;
     }
+
     double angle(int mouseX, int mouseY){
         return Math.atan2(mouseY - y, mouseX - x) - Math.PI / Math.sqrt(2);
     }
@@ -66,6 +72,21 @@ public class Player {
         activeEffects.remove(effect);
     }
 
+    public boolean canShoot() {
+        return attackCoolDown == 0 && arrowsLeft > 0;
+    }
+
+    public void onShoot() {
+        attackCoolDown = 6;
+        arrowsLeft--;
+    }
+
+    public boolean canHit() {
+        return attackCoolDown == 0;
+    }
+    public void onHit() {
+        attackCoolDown = 30;
+    }
     public void updateEffects() {
         for (int i = activeEffects.size() - 1; i >= 0; i--) {
             activeEffects.get(i).update(this);
@@ -78,7 +99,7 @@ public class Player {
         updateEffects();
     }*/
 
-    public void draw(Graphics g, int mouseX, int mouseY){
+    public void draw(Graphics g){
         Graphics2D g2 = (Graphics2D) g;
 
         int centerX = x + width / 2;
@@ -96,8 +117,8 @@ public class Player {
         return new Rectangle(x, y, width, height);
     }
 
-    public void attack(ArrayList<Enemy> enemies, int mouseX, int mouseY, boolean mousePressed){
-        currentWeapon.attack(this, enemies, mouseX, mouseY, mousePressed);
+    public void attack(GameContext context, int mouseX, int mouseY, boolean mousePressed){
+        currentWeapon.attack(this, context, mouseX, mouseY, mousePressed);
     }
 
     public Rectangle getAttackBounds(int mouseX, int mouseY, int attackSize){
@@ -126,28 +147,28 @@ public class Player {
         }
     }
 
-    public void update(int mouseX, int mouseY, boolean mouseClicked,
-                       boolean up, boolean down, boolean left, boolean right,
-                       int width, int height, ArrayList<Enemy> enemies) {
+    public void update(InputState input, int width, int height, GameContext context) {
 
-        playerAngle = angle(mouseX, mouseY);
+        playerAngle = angle(input.mouseX, input.mouseY);
 
         if (arrowsLeft > 30) arrowsLeft = 30;
 
-        attack(enemies, mouseX, mouseY, mouseClicked);
+        attack(context, input.mouseX, input.mouseY, input.mouseClicked);
 
         if (damageCoolDown > 0) damageCoolDown--;
 
+        if (attackCoolDown > 0) attackCoolDown--;
+
         if (hp <= 0) isAlive = false;
 
-        move(up, down, left, right, width, height);
+        move(input, width, height);
     }
 
-    public void move(boolean up, boolean down, boolean left, boolean right, int width, int height) {
-        if (up && y > 0) y -= speed;
-        if (down && y < height - this.height) y += speed;
-        if (left && x > 0) x -= speed;
-        if (right && x < width - this.width) x += speed;
+    public void move(InputState input, int width, int height) {
+        if (input.up && y > 0) y -= speed;
+        if (input.down && y < height - this.height) y += speed;
+        if (input.left && x > 0) x -= speed;
+        if (input.right && x < width - this.width) x += speed;
     }
     public void addEnemyKill(int scoreValue){
         score += scoreValue;
@@ -169,6 +190,17 @@ public class Player {
         hp += amount;
     }
 
+    public void speedUp(int amount){
+        speed += amount;
+    }
+
+    public void increaseHitBox(int amount){
+        attackSize += amount;
+    }
+
+    public void increaseDamage(int amount){
+        damage += amount;
+    }
     private boolean collisionEnable(Enemy enemy, Rectangle attackRect) {
         return enemy.getBounds().intersects(attackRect);
     }

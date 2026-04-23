@@ -1,14 +1,17 @@
-package org.example;
+package org.example.items.powerUps;
+
+import org.example.entities.Player;
+import org.example.items.PowerUp;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Objects;
 
-public class PowerSpeedIncrease extends PowerUp{
+public class PowerSpeedIncrease extends PowerUp {
     int extraSpeed;
     int duration;
-    Image image = new ImageIcon(getClass().getResource("/PowerUpSpeed.png")).getImage();
     public PowerSpeedIncrease(int x, int y, int extraSpeed, int duration) {
-        super(x, y);
+        super(x, y, new ImageIcon(Objects.requireNonNull(PowerSword.class.getResource("/PowerUpSpeed.png"))).getImage());
         this.extraSpeed = extraSpeed;
         this.duration = duration;
     }
@@ -17,13 +20,10 @@ public class PowerSpeedIncrease extends PowerUp{
     protected Color getColor() {
         return Color.pink;
     }
-    @Override
-    public void draw(Graphics g) {
-        g.drawImage(image, x - (drawWidth - width)/2, y - (drawHeight - height)/2, drawWidth, drawHeight, null);
-    }
+
     @Override
     public void apply(Player player) {
-        player.setSpeed(player.getSpeed() + extraSpeed);
+        player.speedUp(extraSpeed);
 
         player.addTemporaryEffect(new Player.TemporaryEffect() {
             int timer = duration;
@@ -32,7 +32,7 @@ public class PowerSpeedIncrease extends PowerUp{
             public void update(Player p){
                 timer--;
                 if(timer <= 0){
-                    player.setSpeed(player.getSpeed() - extraSpeed);
+                    player.speedUp(-extraSpeed);
                     p.removeTemporaryEffect(this);
                 }
             }

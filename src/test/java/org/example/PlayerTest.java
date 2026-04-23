@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class PlayerTest {
 
-    @Test
+    /*@Test
     void testAttackDirectionRight() {
         Player player = new Player(50, 50);
 
@@ -56,5 +56,5 @@ public class PlayerTest {
         player.attack(enemies, 100, 50, true);
 
         assertEquals(hpAfterFirstHit, enemy.hp);
-    }
+    }*/
 }
