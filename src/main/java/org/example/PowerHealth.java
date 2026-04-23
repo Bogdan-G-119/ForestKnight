@@ -2,10 +2,11 @@ package org.example;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Objects;
 
 public class PowerHealth extends PowerUp{
     int extraHp;
-    Image image = new ImageIcon(getClass().getResource("/PowerUpHeal.png")).getImage();
+    Image image = new ImageIcon(Objects.requireNonNull(getClass().getResource("/PowerUpHeal.png"))).getImage();
     public PowerHealth(int x, int y, int extraHp) {
         super(x, y);
         this.extraHp = extraHp;
@@ -22,6 +23,6 @@ public class PowerHealth extends PowerUp{
     }
 
     @Override
-    public void apply(Player player) {player.hp += extraHp;}
+    public void apply(Player player) {player.setHP(player.getHP() + extraHp);}
 
 }

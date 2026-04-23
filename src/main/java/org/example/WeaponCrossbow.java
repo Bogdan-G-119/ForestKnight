@@ -12,7 +12,7 @@ public class WeaponCrossbow extends Weapon {
     @Override
     public void attack(Player player, ArrayList<Enemy> enemies, int mouseX, int mouseY, boolean mousePressed) {
         if(player.attackCoolDown == 0 && mousePressed && player.arrowsLeft > 0){
-            arrows.add(new Arrow(player.x, player.y, mouseX, mouseY));
+            arrows.add(new Arrow(player.getX(), player.getY(), mouseX, mouseY));
             player.attackCoolDown = 6;
             player.arrowsLeft--;
         }

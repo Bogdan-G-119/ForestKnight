@@ -17,27 +17,80 @@ public abstract class Enemy {
     protected int damage;
     protected boolean isAlive;
     protected int scoreValue;
-    double knockBackX = 0;
-    double knockBackY = 0;
+    private double knockBackX = 0;
+    private double knockBackY = 0;
     int knockBackTime = 0;
     float knockBackResistance;
     int hitFlashTime = 0;
     Image image;
     double angleToPlayer;
+    private boolean deathHandled = false;
+
     double angle(Player player){
-        return Math.atan2(player.y - y, player.x - x) + Math.PI / 2;
+        return Math.atan2(player.getY() - y, player.getX() - x) + Math.PI / 2;
     }
 
-    public abstract void update(Player player);
+    public void update(Player player){
+        hitFlashUpdate();
+        knockBackUpdate();
 
-    public abstract void draw(Graphics g);
+        moveTo(player);
+
+        handleDeath(player);
+    }
+
+    public void draw(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
+
+        int centerX = x + width / 2;
+        int centerY = y + height / 2;
+
+        g2.rotate(angleToPlayer, centerX, centerY);
+
+        g2.drawImage(image, x - (drawWidth - width)/2, y - (drawHeight - height)/2, drawWidth, drawHeight, null);
+
+        g2.rotate(-angleToPlayer, centerX, centerY);
+    }
+    private void hitFlashUpdate() {
+        if(hitFlashTime > 0) hitFlashTime--;
+    }
+
+    protected void knockBackUpdate() {
+        if (knockBackTime > 0) {
+            x += (int) knockBackX;
+            y += (int) knockBackY;
+
+            knockBackX *= 0.9;
+            knockBackY *= 0.9;
+
+            knockBackTime--;
+        }
+    }
+    protected void handleDeath(Player player) {
+        if (hp <= 0 && !deathHandled) {
+            onDeath(player);
+            deathHandled = true;
+        }
+    }
+
+    private void onDeath(Player player) {
+        player.addEnemyKill(scoreValue);
+    }
+    public boolean isReadyToRemove() {
+        return deathHandled;
+    }
 
     public Rectangle getBounds() {
         return new Rectangle(x, y, width, height);
     }
-    public void takeDamage(Player player){
-        player.hp -= damage;
+    public void causeDamage(Player player){
+        player.takeDamage(damage);
     }
+    public void takeDamage(int damage){
+        hp -= damage;
+        hitFlashTime = 5;
+    }
+
     public void applyKnockBack(int playerX, int playerY, double force){
         double dx = x - playerX;
         double dy = y - playerY;
@@ -49,5 +102,15 @@ public abstract class Enemy {
         knockBackY = (dy / length) * force * knockBackResistance;
 
         knockBackTime = 10;
+    }
+    public void moveTo(Player player){
+        if(player.getX() > x){x += speed;}
+        if(player.getY() > y){y += speed;}
+        if(player.getX() < x){x -= speed;}
+        if(player.getY() < y){y -= speed;}
+        angleToPlayer = angle(player);
+    }
+    public boolean isDead() {
+        return hp <= 0;
     }
 }

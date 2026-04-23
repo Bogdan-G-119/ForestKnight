@@ -16,7 +16,7 @@ public class WeaponSword extends Weapon {
                 if(enemy.getBounds().intersects(attackRect)){
                     enemy.hp -= player.damage;
 
-                    enemy.applyKnockBack(player.x, player.y, 5);
+                    enemy.applyKnockBack(player.getX(), player.getY(), 5);
                     enemy.hitFlashTime = 5;
                 }
             }

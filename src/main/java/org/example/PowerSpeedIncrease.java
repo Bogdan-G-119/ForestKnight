@@ -23,7 +23,7 @@ public class PowerSpeedIncrease extends PowerUp{
     }
     @Override
     public void apply(Player player) {
-        player.speed += extraSpeed;
+        player.setSpeed(player.getSpeed() + extraSpeed);
 
         player.addTemporaryEffect(new Player.TemporaryEffect() {
             int timer = duration;
@@ -32,7 +32,7 @@ public class PowerSpeedIncrease extends PowerUp{
             public void update(Player p){
                 timer--;
                 if(timer <= 0){
-                    p.speed -= extraSpeed;
+                    player.setSpeed(player.getSpeed() - extraSpeed);
                     p.removeTemporaryEffect(this);
                 }
             }

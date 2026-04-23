@@ -9,9 +9,7 @@ public class PlayerTest {
 
     @Test
     void testAttackDirectionRight() {
-        Player player = new Player();
-        player.x = 50;
-        player.y = 50;
+        Player player = new Player(50, 50);
 
         Player.AttackDirection dir = player.getAttackDirection(100, 50);
 
@@ -20,9 +18,8 @@ public class PlayerTest {
 
     @Test
     void testAttackDirectionLeft() {
-        Player player = new Player();
-        player.x = 50;
-        player.y = 50;
+        Player player = new Player(50, 50);
+
 
         Player.AttackDirection dir = player.getAttackDirection(0, 50);
 
@@ -31,11 +28,9 @@ public class PlayerTest {
 
     @Test
     void testAttackDealsDamage() {
-        Player player = new Player();
-        player.x = 50;
-        player.y = 50;
+        Player player = new Player(50, 50);
 
-        Enemy enemy = new Wolf(60, 50);
+        Enemy enemy = new EnemyWolf(60, 50);
         int initialHp = enemy.hp;
 
         ArrayList<Enemy> enemies = new ArrayList<>();
@@ -48,11 +43,9 @@ public class PlayerTest {
 
     @Test
     void testAttackCoolDown() {
-        Player player = new Player();
-        player.x = 50;
-        player.y = 50;
+        Player player = new Player(50, 50);
 
-        Enemy enemy = new Wolf(60, 50);
+        Enemy enemy = new EnemyWolf(60, 50);
 
         ArrayList<Enemy> enemies = new ArrayList<>();
         enemies.add(enemy);

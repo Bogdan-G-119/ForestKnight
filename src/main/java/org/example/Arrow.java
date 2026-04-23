@@ -38,9 +38,16 @@ public class Arrow {
         }
     }
 
-    public void update(){
+    public boolean update(ArrayList<Enemy> enemies){
         x += dx;
         y += dy;
+        for (Enemy enemy : enemies) {
+            if (getBounds().intersects(enemy.getBounds())) {
+                enemy.takeDamage(5);
+                return true;
+            }
+        }
+        return false;
     }
 
     public void draw(Graphics g){

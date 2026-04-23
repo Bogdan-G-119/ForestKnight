@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.awt.event.MouseEvent;
+import java.util.Objects;
 
 class GamePanel extends JPanel implements KeyListener, MouseListener {
     ArrayList<Enemy> enemies = new ArrayList<>();
@@ -42,7 +43,7 @@ class GamePanel extends JPanel implements KeyListener, MouseListener {
                 mouseY = e.getY();
             }
         });
-        background = new ImageIcon(getClass().getResource("/BG.jpg")).getImage();
+        background = new ImageIcon(Objects.requireNonNull(getClass().getResource("/BG.jpg"))).getImage();
     }
 
     boolean mouseClicked = false;
@@ -84,12 +85,10 @@ class GamePanel extends JPanel implements KeyListener, MouseListener {
         int key = e.getKeyCode();
 
         if(key == KeyEvent.VK_1){
-            player.currentWeapon = player.sword;
-            player.image = new ImageIcon(getClass().getResource("/Player.png")).getImage();
+            player.setWeapon(player.sword, new ImageIcon(Objects.requireNonNull(getClass().getResource("/Player.png"))).getImage());
         }
         if(key == KeyEvent.VK_2){
-            player.currentWeapon = player.crossbow;
-            player.image = new ImageIcon(getClass().getResource("/PlayerWithBow.png")).getImage();
+            player.setWeapon(player.crossbow, new ImageIcon(Objects.requireNonNull(getClass().getResource("/PlayerWithBow.png"))).getImage());
         }
 
         if(key == KeyEvent.VK_W){
@@ -130,11 +129,11 @@ class GamePanel extends JPanel implements KeyListener, MouseListener {
         super.paintComponent(g);
         g.drawImage(background, 0, 0, getWidth(), getHeight(), null);
         Color originalColor = g.getColor();
-        if(player.isAlive) {
+        if(player.isAlive()) {
             player.draw(g, mouseX, mouseY);
        } else {
            g.setColor(Color.RED);
-           g.fillRect(player.x, player.y, player.width, player.height);
+           g.fillRect(player.getX(), player.getY(), player.width, player.height);
        }
 
        g.setColor(originalColor);
@@ -164,7 +163,7 @@ class GamePanel extends JPanel implements KeyListener, MouseListener {
        g.fillRect(10, 10, 200, 80);
 
        g.setColor(Color.WHITE);
-       g.drawString("HP: " + player.hp, 20, 30);
+       g.drawString("HP: " + player.getHP(), 20, 30);
        g.drawString("Arrows: " + player.arrowsLeft, 20, 50);
 
        g.drawRect(10, getHeight() - 60, 100, 50);
@@ -173,77 +172,47 @@ class GamePanel extends JPanel implements KeyListener, MouseListener {
     }
 
     public void update() {
-        if(player.isAlive){
-            player.playerAngle = player.angle(mouseX, mouseY);
-            if(player.arrowsLeft > 30){
-                player.arrowsLeft = 30;
+        if(!player.isAlive()) return;
+
+        waveManager.update();
+
+        player.update(mouseX, mouseY, mouseClicked, upPressed, downPressed, leftPressed, rightPressed, getWidth(), getHeight(), enemies);
+
+        updatePowerUps();
+        updateEnemies();
+        updateArrows();
+
+        mouseClicked = false;
+    }
+
+    public void updatePowerUps(){
+        for(PowerUp power : powerUps){
+            if(!power.isCollected){
+                power.checkCollision(player);
             }
-            player.attack(enemies, mouseX, mouseY, mouseClicked);
-            waveManager.update();
-
-            if(player.damageCoolDown > 0) player.damageCoolDown--;
-            if (player.hp <= 0){
-                player.isAlive = false;
-            }
-
-            if (upPressed && player.y > 0) {
-                player.y -= player.speed;
-            }
-
-            if (leftPressed && player.x > 0) {
-                player.x -= player.speed;
-            }
-
-            if (downPressed && player.y < getHeight() - player.height) {
-                player.y += player.speed;
-            }
-
-            if (rightPressed && player.x < getWidth() - player.width) {
-                player.x += player.speed;
-            }
-
-            Iterator<Enemy> iterator = enemies.iterator();
-
-            while (iterator.hasNext()) {
-                Enemy enemy = iterator.next();
-                enemy.update(player);
-
-                if (collisionEnable(enemy) && player.damageCoolDown == 0) {
-                    enemy.takeDamage(player);
-                    player.damageCoolDown = 30;
-                }
-
-                if(enemy.hp <= 0){
-                    enemy.isAlive = false;
-                    player.score += enemy.scoreValue;
-                    player.arrowsLeft += 5;
-                    iterator.remove();
-                }
-            }
-            for(PowerUp power : powerUps){
-                if(!power.isCollected){
-                    power.checkCollision(player);
-                }
-            }
-            Iterator<Arrow> arrowIterator = arrows.iterator();
-
-            while(arrowIterator.hasNext()){
-                Arrow arrow = arrowIterator.next();
-                arrow.update();
-
-                for(Enemy enemy : enemies){
-                    if(arrow.getBounds().intersects(enemy.getBounds())){
-                        enemy.hp -= 5;
-                        enemy.hitFlashTime = 5;
-                        arrowIterator.remove();
-                        break;
-                    }
-                }
-            }
-            mouseClicked = false;
         }
     }
 
+    public void updateEnemies(){
+        Iterator<Enemy> iterator = enemies.iterator();
+
+        while (iterator.hasNext()) {
+            Enemy enemy = iterator.next();
+            enemy.update(player);
+
+            if (collisionEnable(enemy)) {
+                player.handleCollisionWithEnemy(enemy);
+            }
+
+            if(enemy.isDead() && enemy.isReadyToRemove()){
+                iterator.remove();
+            }
+        }
+    }
+
+    public void updateArrows(){
+        arrows.removeIf(arrow -> arrow.update(enemies));
+    }
     private boolean collisionEnable(Enemy enemy) {
         return player.getBounds().intersects(enemy.getBounds());
     }
