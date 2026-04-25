@@ -38,4 +38,9 @@ public class PowerSpeedIncrease extends PowerUp {
             }
         });
     }
+
+    @Override
+    public void update() {
+
+    }
 }

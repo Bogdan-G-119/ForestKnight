@@ -1,5 +1,7 @@
 package org.example.core;
 
+import org.example.Drawable;
+import org.example.Updatable;
 import org.example.entities.Arrow;
 import org.example.entities.Enemy;
 import org.example.entities.Player;
@@ -24,16 +26,18 @@ public class GameWorld {
     public final Weapon sword = new WeaponSword();
     public final Weapon crossbow = new WeaponCrossbow();
     Image background, crossbowImg, swordImg;
-
+    //List<Updatable> updatables;
+    //List<Drawable> drawables;
     GameContext context;
+
     public void render(Graphics g, int width, int height) {
         drawBG(g, width, height);
 
         player.draw(g);
 
-        for (Enemy e : enemies) e.draw(g);
-        for (PowerUp p : powerUps) if (!p.isCollected()) p.draw(g);
-        for (Arrow a : arrows) a.draw(g);
+        for (Drawable d : enemies) d.draw(g);
+        for (Drawable d : powerUps) d.draw(g);
+        for (Drawable d : arrows) d.draw(g);
 
         drawUI(g, width, height);
     }
@@ -49,7 +53,7 @@ public class GameWorld {
         player = new Player();
         player.setWeapon(sword, swordImg);
         waveManager = new WaveManager(enemies, powerUps);
-        context = new GameContext(enemies, arrows);
+        context = new GameContext(player, enemies, arrows, powerUps);
     }
 
     public void update(InputState input, int width, int height) {
@@ -58,7 +62,7 @@ public class GameWorld {
 
         waveManager.update();
 
-        player.update(input, width, height, context);
+        context.player.update(input, width, height, context);
 
         if (input.key1) {
             player.setWeapon(sword, swordImg);
@@ -79,21 +83,19 @@ public class GameWorld {
 
     public void updatePowerUps(){
         for(PowerUp power : powerUps){
-            if(!power.isCollected()){
-                power.checkCollision(player);
-            }
+            power.update(context);
         }
     }
 
     public void updateEnemies(){
-        Iterator<Enemy> iterator = enemies.iterator();
+        Iterator<Enemy> iterator = context.enemies.iterator();
 
         while (iterator.hasNext()) {
             Enemy enemy = iterator.next();
-            enemy.update(player);
+            enemy.update(context);
 
             if (collisionEnable(enemy)) {
-                player.handleCollisionWithEnemy(enemy);
+                context.player.handleCollisionWithEnemy(enemy);
             }
 
             if(enemy.isDead() && enemy.isReadyToRemove()){
@@ -102,7 +104,7 @@ public class GameWorld {
         }
     }
     public void updateArrows(){
-        arrows.removeIf(arrow -> arrow.update(enemies));
+        arrows.removeIf(arrow -> arrow.update(context));
     }
 
     public void drawUI(Graphics g, int width, int height){

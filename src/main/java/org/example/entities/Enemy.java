@@ -1,9 +1,13 @@
 package org.example.entities;
 
+import org.example.Drawable;
+import org.example.Updatable;
+import org.example.core.GameContext;
+
 import java.awt.*;
 import java.awt.Rectangle;
 
-public abstract class Enemy {
+public abstract class Enemy implements Updatable, Drawable {
     protected int x = 0;
     protected int y = 0;
     protected int width = 0;
@@ -35,26 +39,32 @@ public abstract class Enemy {
         return Math.atan2(player.getY() - y, player.getX() - x) + Math.PI / 2;
     }
 
-    public void update(Player player){
+    public void update(GameContext context) {
         hitFlashUpdate();
         knockBackUpdate();
 
-        moveTo(player);
+        moveTo(context.player);
 
-        handleDeath(player);
+        if (hp <= 0 && !deathHandled) {
+            onDeath(context.player);
+            deathHandled = true;
+        }
     }
+
 
     public void draw(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
+        Composite old = g2.getComposite();
 
         int centerX = x + width / 2;
         int centerY = y + height / 2;
 
         g2.rotate(angleToPlayer, centerX, centerY);
-
+        if (hitFlashTime > 0 && hitFlashTime % 2 == 0) {g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));}
         g2.drawImage(enemyImage, x - (drawWidth - width)/2, y - (drawHeight - height)/2, drawWidth, drawHeight, null);
 
         g2.rotate(-angleToPlayer, centerX, centerY);
+        g2.setComposite(old);
     }
     private void hitFlashUpdate() {
         if(hitFlashTime > 0) hitFlashTime--;
@@ -92,8 +102,14 @@ public abstract class Enemy {
         player.takeDamage(damage);
     }
     public void takeDamage(int damage){
-        hp -= damage;
-        hitFlashTime = 5;
+        takeDamage(damage, false);
+    }
+    public void takeDamage(int damage, boolean isCritical) {
+        if(isCritical){
+            hp -= damage * 2;
+        } else {
+            hp -= damage;
+        }
     }
 
     public void applyKnockBack(int playerX, int playerY, double force){
@@ -107,6 +123,7 @@ public abstract class Enemy {
         knockBackY = (dy / length) * force * knockBackResistance;
 
         knockBackTime = 10;
+        hitFlashTime = 10;
     }
     public void moveTo(Player player){
         if(player.getX() > x){x += speed;}

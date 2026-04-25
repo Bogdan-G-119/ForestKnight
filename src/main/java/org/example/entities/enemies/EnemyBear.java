@@ -20,4 +20,9 @@ public class EnemyBear extends Enemy {
         hp = 35;
         isAlive = true;
     }
+
+    @Override
+    public void update() {
+
+    }
 }

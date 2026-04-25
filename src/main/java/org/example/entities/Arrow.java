@@ -1,5 +1,8 @@
 package org.example.entities;
 
+import org.example.Drawable;
+import org.example.Updatable;
+import org.example.core.GameContext;
 import org.example.entities.Enemy;
 
 import javax.swing.*;
@@ -7,7 +10,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Arrow {
+public class Arrow implements Updatable, Drawable {
     double x, y;
     double dx, dy;
 
@@ -15,6 +18,7 @@ public class Arrow {
     int drawWidth = size*10;
     int drawHeight = size*10;
     int speed = 10;
+    int damage = 4;
     boolean isAlive = true;
     Image image;
 
@@ -41,13 +45,15 @@ public class Arrow {
         }
     }
 
-    public boolean update(ArrayList<Enemy> enemies){
+    public boolean update(GameContext context){
         x += dx;
         y += dy;
-        for (Enemy enemy : enemies) {
+        for (Enemy enemy : context.enemies) {
             if (getBounds().intersects(enemy.getBounds())) {
-                enemy.takeDamage(5);
-                enemy.applyKnockBack((int) x, (int)y, 10);
+                double distanceToEnemy = Math.sqrt(Math.pow((enemy.x - x), 2) + Math.pow((enemy.y - y), 2));
+                boolean longRangeHit = (int)distanceToEnemy > 100;
+                enemy.takeDamage(damage, longRangeHit);
+                enemy.applyKnockBack((int) (x + drawWidth / 2), (int) (y + drawHeight / 2),10);
                 return true;
             }
         }
@@ -69,5 +75,10 @@ public class Arrow {
 
     public Rectangle getBounds(){
         return new Rectangle((int)x, (int)y, size, size);
+    }
+
+    @Override
+    public void update() {
+
     }
 }

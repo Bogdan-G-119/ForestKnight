@@ -23,4 +23,9 @@ public class PowerSword extends PowerUp {
     public void apply(Player player) {
         player.increaseHitBox(extraSize);
     }
+
+    @Override
+    public void update() {
+
+    }
 }

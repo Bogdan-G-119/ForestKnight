@@ -20,5 +20,8 @@ public class PowerDamageIncrease extends PowerUp {
     public void apply(Player player) {
         player.increaseDamage(extraDamage);
     }
+    @Override
+    public void update() {
 
+    }
 }

@@ -20,4 +20,8 @@ public class EnemyKnight extends Enemy {
         hp = 25;
         isAlive = true;
     }
+    @Override
+    public void update() {
+
+    }
 }

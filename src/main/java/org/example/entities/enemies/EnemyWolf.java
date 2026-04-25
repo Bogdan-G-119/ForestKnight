@@ -21,4 +21,8 @@ public class EnemyWolf extends Enemy {
         hp = 20;
         isAlive = true;
     }
+    @Override
+    public void update() {
+
+    }
 }

@@ -1,5 +1,7 @@
 package org.example.entities;
 
+import org.example.Drawable;
+import org.example.Updatable;
 import org.example.core.GameContext;
 import org.example.weapons.Weapon;
 import org.example.weapons.WeaponSword;
@@ -11,7 +13,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Player {
+public class Player implements Updatable, Drawable {
     ArrayList<TemporaryEffect> activeEffects = new ArrayList<>();
     private int x = 0;
     private int y = 0;
@@ -33,8 +35,8 @@ public class Player {
 
     private int damage = 3;
     int extraDamage = 0;
-    private int attackSize = 30;
-
+    private int attackSize = 50;
+    int mouseX, mouseY;
     private Weapon currentWeapon;
     private int arrowsLeft = 20;
     double playerAngle;
@@ -55,7 +57,14 @@ public class Player {
     }
 
     double angle(int mouseX, int mouseY){
+        this.mouseX = mouseX;
+        this.mouseY = mouseY;
         return Math.atan2(mouseY - y, mouseX - x) - Math.PI / Math.sqrt(2);
+    }
+
+    @Override
+    public void update() {
+
     }
 
     public interface TemporaryEffect {
@@ -64,6 +73,7 @@ public class Player {
     public void takeDamage(int damage){
         hp -= damage;
     }
+
     public void addTemporaryEffect(TemporaryEffect effect){
         activeEffects.add(effect);
     }
@@ -110,7 +120,6 @@ public class Player {
         g2.drawImage(image, x - (drawWidth - width)/2, y - (drawHeight - height)/2, drawWidth, drawHeight, null);
 
         g2.rotate(-playerAngle, centerX, centerY);
-
     }
 
     public Rectangle getBounds(){
@@ -121,15 +130,19 @@ public class Player {
         currentWeapon.attack(this, context, mouseX, mouseY, mousePressed);
     }
 
-    public Rectangle getAttackBounds(int mouseX, int mouseY, int attackSize){
-        AttackDirection dir = getAttackDirection(mouseX, mouseY);
-        switch (dir){
-            case UP: return new Rectangle(x, y-attackSize-height, attackSize, attackSize);
-            case DOWN: return new Rectangle(x, y+2*height, attackSize, attackSize);
-            case LEFT: return new Rectangle(x-attackSize-width, y, attackSize, attackSize);
-            case RIGHT: return new Rectangle(x+2*width, y, attackSize, attackSize);
-        }
-        return new Rectangle(x, y, width, height);
+    public Rectangle getAttackBounds(int mouseX, int mouseY, int attackSize) {
+
+        double angle = angle(mouseX, mouseY) + Math.PI/Math.sqrt(2);
+
+        int centerX = x + width / 2;
+        int centerY = y + height / 2;
+
+        int range = attackSize / 2;
+
+        int hitX = (int)(centerX + Math.cos(angle) * range);
+        int hitY = (int)(centerY + Math.sin(angle) * range);
+
+        return new Rectangle(hitX - attackSize / 2, hitY - attackSize / 2, attackSize, attackSize);
     }
 
     public enum AttackDirection {
@@ -162,6 +175,8 @@ public class Player {
         if (hp <= 0) isAlive = false;
 
         move(input, width, height);
+
+        updateEffects();
     }
 
     public void move(InputState input, int width, int height) {

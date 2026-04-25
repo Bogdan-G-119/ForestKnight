@@ -4,6 +4,6 @@ public class InputState {
     public boolean up, down, left, right;
     public boolean mouseClicked;
     public int mouseX, mouseY;
-
+    public int attackSize;
     public boolean key1, key2;
 }

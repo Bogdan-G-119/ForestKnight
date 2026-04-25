@@ -118,7 +118,7 @@ public class WaveManager {
                 powerUps.add(new PowerHealth(x, y, 5));
                 break;
             case SPEED:
-                powerUps.add(new PowerSpeedIncrease(x, y, 1, 300));
+                powerUps.add(new PowerSpeedIncrease(x, y, 3, 100));
                 break;
             case SWORD:
                 powerUps.add(new PowerSword(x, y, 10));

@@ -23,4 +23,8 @@ public class PowerHealth extends PowerUp {
     @Override
     public void apply(Player player) {player.heal(extraHp);}
 
+    @Override
+    public void update() {
+
+    }
 }

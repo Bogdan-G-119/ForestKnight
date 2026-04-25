@@ -1,10 +1,13 @@
 package org.example.items;
 
+import org.example.Drawable;
+import org.example.Updatable;
+import org.example.core.GameContext;
 import org.example.entities.Player;
 
 import java.awt.*;
 
-public abstract class PowerUp {
+public abstract class PowerUp implements Updatable, Drawable {
     private int x, y;
     private int width = 10;
     private int height = 10;
@@ -17,6 +20,13 @@ public abstract class PowerUp {
         this.y = y;
         this.powerUpImage = powerUpImage;
     }
+    public void update(GameContext context){
+        for(PowerUp power : context.powerUps){
+            if(!power.isCollected()){
+                power.checkCollision(context.player);
+            }
+        }
+    }
     public boolean isCollected() {
         return isCollected;
     }
@@ -27,6 +37,9 @@ public abstract class PowerUp {
         }
     }
     public void draw(Graphics g) {
+        if (isCollected()){
+            return;
+        }
         g.drawImage(powerUpImage, x - (drawWidth - width)/2, y - (drawHeight - height)/2, drawWidth, drawHeight, null);
     }
 
