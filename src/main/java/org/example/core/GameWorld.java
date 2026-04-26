@@ -119,6 +119,7 @@ public class GameWorld {
         g.drawString("HP: " + player.getHP(), 20, 30);
         g.drawString("Arrows: " + player.getArrowsLeft(), 20, 50);
         g.drawString("Score: " + player.getScore(), 70, 30);
+        g.drawString("Wave: " + waveManager.waveNumber, 100, 50);
 
         g.drawRect(10, height - 60, 100, 50);
         g.drawString("1: Sword", 15, height - 40);
