@@ -6,7 +6,9 @@ import org.example.items.PowerUp;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
-
+/**
+ * Power-up, ktorý zvyšuje rýchlosť pohybu hráča.
+ */
 public class PowerSpeedIncrease extends PowerUp {
     int extraSpeed;
     int duration;
@@ -39,8 +41,4 @@ public class PowerSpeedIncrease extends PowerUp {
         });
     }
 
-    @Override
-    public void update() {
-
-    }
 }

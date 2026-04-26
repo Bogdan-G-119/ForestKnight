@@ -1,13 +1,15 @@
 package org.example.items;
 
 import org.example.Drawable;
-import org.example.Updatable;
 import org.example.core.GameContext;
 import org.example.entities.Player;
 
 import java.awt.*;
-
-public abstract class PowerUp implements Updatable, Drawable {
+/**
+ * Abstraktná trieda power-upu.
+ * Definuje efekt, ktorý môže byť aplikovaný na hráča.
+ */
+public abstract class PowerUp implements Drawable {
     private int x, y;
     private int width = 10;
     private int height = 10;

@@ -1,13 +1,16 @@
 package org.example.entities;
 
 import org.example.Drawable;
-import org.example.Updatable;
 import org.example.core.GameContext;
 
 import java.awt.*;
 import java.awt.Rectangle;
 
-public abstract class Enemy implements Updatable, Drawable {
+/**
+ * Základná trieda nepriateľa.
+ * Obsahuje logiku pohybu, poškodenia, knockbacku a smrti.
+ */
+public abstract class Enemy implements Drawable {
     protected int x = 0;
     protected int y = 0;
     protected int width = 0;
@@ -30,6 +33,15 @@ public abstract class Enemy implements Updatable, Drawable {
 
     protected Image enemyImage;
     protected float knockBackResistance;
+    public int getX(){
+        return x;
+    }
+    public int getY(){
+        return y;
+    }
+    public int getHp(){
+        return hp;
+    }
     public Enemy(Image image, float knockBackResistance) {
         this.enemyImage = image;
         this.knockBackResistance = knockBackResistance;
@@ -79,12 +91,6 @@ public abstract class Enemy implements Updatable, Drawable {
             knockBackY *= 0.9;
 
             knockBackTime--;
-        }
-    }
-    protected void handleDeath(Player player) {
-        if (hp <= 0 && !deathHandled) {
-            onDeath(player);
-            deathHandled = true;
         }
     }
 

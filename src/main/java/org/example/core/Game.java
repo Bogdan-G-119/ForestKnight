@@ -1,6 +1,10 @@
 package org.example.core;
 
 import javax.swing.*;
+/**
+ * Hlavná vstupná trieda hry.
+ * Spúšťa hernú aplikáciu a inicializuje základné komponenty.
+ */
 public class Game extends JFrame{
     static int width = 780;
     static int height = 514;

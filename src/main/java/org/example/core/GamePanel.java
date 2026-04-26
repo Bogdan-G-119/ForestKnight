@@ -8,6 +8,10 @@ import javax.swing.*;
 import java.awt.Dimension;
 import java.util.Objects;
 
+/**
+ * Grafický panel hry.
+ * Zodpovedá za vykresľovanie a spúšťanie hernej slučky (game loop).
+ */
 public class GamePanel extends JPanel {
     InputState input = new InputState();
     InputHandler handler = new InputHandler(input);

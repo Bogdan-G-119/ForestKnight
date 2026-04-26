@@ -3,7 +3,10 @@ package org.example.weapons;
 import org.example.core.GameContext;
 import org.example.entities.Arrow;
 import org.example.entities.Player;
-
+/**
+ * Kuša - ranged zbraň.
+ * Vystreľuje šípy na diaľku.
+ */
 public class WeaponCrossbow extends Weapon {
 
     @Override

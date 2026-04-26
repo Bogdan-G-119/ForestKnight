@@ -1,7 +1,6 @@
 package org.example.entities;
 
 import org.example.Drawable;
-import org.example.Updatable;
 import org.example.core.GameContext;
 import org.example.weapons.Weapon;
 import org.example.weapons.WeaponSword;
@@ -13,7 +12,11 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Player implements Updatable, Drawable {
+/**
+ * Reprezentuje hráča v hre.
+ * Zodpovedá za pohyb, boj, používanie zbraní a interakciu s objektmi.
+ */
+public class Player implements Drawable {
     ArrayList<TemporaryEffect> activeEffects = new ArrayList<>();
     private int x = 0;
     private int y = 0;
@@ -49,6 +52,12 @@ public class Player implements Updatable, Drawable {
     public boolean isAlive() { return isAlive; }
     public int getArrowsLeft() { return arrowsLeft; }
     public int getAttackSize(){return attackSize;}
+    public int getAttackCoolDown() {
+        return attackCoolDown;
+    }
+    public int getScore() {
+        return score;
+    }
     public Player() {}
     public Player(Weapon weapon) {currentWeapon = weapon;}
     public Player(int x, int y) {
@@ -62,10 +71,6 @@ public class Player implements Updatable, Drawable {
         return Math.atan2(mouseY - y, mouseX - x) - Math.PI / Math.sqrt(2);
     }
 
-    @Override
-    public void update() {
-
-    }
 
     public interface TemporaryEffect {
         void update(Player player);
@@ -103,12 +108,6 @@ public class Player implements Updatable, Drawable {
         }
     }
 
-    /*public void tick(Player player, ArrayList<Enemy> enemies, int mouseX, int mouseY){
-        currentWeapon.attack(player, enemies, mouseX, mouseY);
-
-        updateEffects();
-    }*/
-
     public void draw(Graphics g){
         Graphics2D g2 = (Graphics2D) g;
 
@@ -143,21 +142,6 @@ public class Player implements Updatable, Drawable {
         int hitY = (int)(centerY + Math.sin(angle) * range);
 
         return new Rectangle(hitX - attackSize / 2, hitY - attackSize / 2, attackSize, attackSize);
-    }
-
-    public enum AttackDirection {
-        UP, DOWN, LEFT, RIGHT
-    }
-
-    public AttackDirection getAttackDirection(int mouseX, int mouseY){
-        int dx = mouseX - (x + width/2);
-        int dy = mouseY - (y + height/2);
-
-        if(Math.abs(dx) > Math.abs(dy)) {
-            return dx > 0 ? AttackDirection.RIGHT : AttackDirection.LEFT;
-        } else {
-            return dy > 0 ? AttackDirection.DOWN : AttackDirection.UP;
-        }
     }
 
     public void update(InputState input, int width, int height, GameContext context) {

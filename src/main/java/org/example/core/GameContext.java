@@ -6,7 +6,11 @@ import org.example.entities.Player;
 import org.example.items.PowerUp;
 
 import java.util.ArrayList;
-
+/**
+ * Zdieľaný kontext hry.
+ * Obsahuje referencie na herné objekty, ktoré sú potrebné
+ * pre komunikáciu medzi entitami.
+ */
 public class GameContext {
     public Player player;
     public ArrayList<Enemy> enemies;

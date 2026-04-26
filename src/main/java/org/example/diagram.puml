@@ -1,0 +1,84 @@
+@startuml
+
+' ================= CORE =================
+class Game
+class GameWorld
+class GameContext
+class GamePanel
+class WaveManager
+
+' ================= INPUT =================
+class InputState
+class InputHandler
+
+' ================= ENTITIES =================
+class Player
+class Arrow
+
+class Enemy
+class EnemyWolf
+class EnemyBear
+class EnemyKnight
+
+Enemy <|-- EnemyWolf
+Enemy <|-- EnemyBear
+Enemy <|-- EnemyKnight
+
+' ================= WEAPONS =================
+class Weapon
+class WeaponSword
+class WeaponCrossbow
+
+Weapon <|-- WeaponSword
+Weapon <|-- WeaponCrossbow
+
+' ================= POWERUPS =================
+class PowerUp
+class PowerHealth
+class PowerDamageIncrease
+class PowerSpeedIncrease
+class PowerSword
+
+PowerUp <|-- PowerHealth
+PowerUp <|-- PowerDamageIncrease
+PowerUp <|-- PowerSpeedIncrease
+PowerUp <|-- PowerSword
+
+' ================= COLLECTIONS (IMPORTANT) =================
+class "ArrayList<Enemy>" as EnemyList
+class "ArrayList<Arrow>" as ArrowList
+class "ArrayList<PowerUp>" as PowerUpList
+
+' ================= GAME CONTEXT =================
+GameContext --> Player
+GameContext --> EnemyList
+GameContext --> ArrowList
+GameContext --> PowerUpList
+
+EnemyList --> Enemy
+ArrowList --> Arrow
+PowerUpList --> PowerUp
+
+' ================= GAME WORLD =================
+GameWorld --> GameContext
+GameWorld --> Player
+GameWorld --> WaveManager
+
+' ================= INPUT =================
+GamePanel --> GameWorld
+GamePanel --> InputHandler
+InputHandler --> InputState
+
+' ================= GAME LOGIC =================
+Player --> Weapon
+Player --> InputState
+Player --> GameContext
+
+WeaponSword --> Enemy
+WeaponCrossbow --> Arrow
+
+Arrow --> Enemy
+Enemy --> Player
+PowerUp --> Player
+
+@enduml

@@ -1,7 +1,6 @@
 package org.example.entities;
 
 import org.example.Drawable;
-import org.example.Updatable;
 import org.example.core.GameContext;
 import org.example.entities.Enemy;
 
@@ -9,8 +8,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Objects;
-
-public class Arrow implements Updatable, Drawable {
+/**
+ * Projektil vystrelený z kuše.
+ * Pohybuje sa smerom k cieľu a poškodzuje nepriateľov pri zásahu.
+ */
+public class Arrow implements Drawable {
     double x, y;
     double dx, dy;
 
@@ -39,6 +41,7 @@ public class Arrow implements Updatable, Drawable {
 
         dx = (dirX / length) * speed;
         dy = (dirY / length) * speed;
+
         image = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Arrow.png"))).getImage();
         if(image == null){
             System.out.println("IMAGE NOT FOUND");
@@ -48,12 +51,14 @@ public class Arrow implements Updatable, Drawable {
     public boolean update(GameContext context){
         x += dx;
         y += dy;
+        int sourceX = (int)(x - dx);
+        int sourceY = (int)(y - dy);
         for (Enemy enemy : context.enemies) {
             if (getBounds().intersects(enemy.getBounds())) {
                 double distanceToEnemy = Math.sqrt(Math.pow((enemy.x - x), 2) + Math.pow((enemy.y - y), 2));
                 boolean longRangeHit = (int)distanceToEnemy > 100;
                 enemy.takeDamage(damage, longRangeHit);
-                enemy.applyKnockBack((int) (x + drawWidth / 2), (int) (y + drawHeight / 2),10);
+                enemy.applyKnockBack(sourceX, sourceY,10);
                 return true;
             }
         }
@@ -77,8 +82,4 @@ public class Arrow implements Updatable, Drawable {
         return new Rectangle((int)x, (int)y, size, size);
     }
 
-    @Override
-    public void update() {
-
-    }
 }

@@ -2,6 +2,10 @@ package org.example.input;
 
 import java.awt.event.*;
 
+/**
+ * Spracováva vstupy z klávesnice a myši.
+ * Aktualizuje InputState na základe používateľskej interakcie.
+ */
 public class InputHandler implements KeyListener, MouseListener, MouseMotionListener {
 
     private final InputState input;

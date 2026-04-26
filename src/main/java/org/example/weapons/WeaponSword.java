@@ -5,7 +5,10 @@ import org.example.entities.Enemy;
 import org.example.entities.Player;
 
 import java.awt.*;
-
+/**
+ * Meč - melee zbraň.
+ * Útočí v blízkom okolí hráča pomocou hitboxu.
+ */
 public class WeaponSword extends Weapon {
 
     @Override

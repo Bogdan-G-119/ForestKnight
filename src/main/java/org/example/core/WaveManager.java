@@ -12,6 +12,11 @@ import org.example.items.powerUps.PowerSword;
 
 import java.util.ArrayList;
 import java.util.Random;
+
+/**
+ * Spravuje vlny nepriateľov.
+ * Riadi generovanie a postupnú obtiažnosť hry.
+ */
 public class WaveManager {
     ArrayList<Enemy> enemies;
     ArrayList<PowerUp> powerUps;

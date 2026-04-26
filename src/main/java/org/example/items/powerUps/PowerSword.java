@@ -6,7 +6,9 @@ import org.example.items.PowerUp;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
-
+/**
+ * Špeciálny power-up súvisiaci so zbraňou.
+ */
 public class PowerSword extends PowerUp {
     int extraSize;
     public PowerSword(int x, int y, int extraSize) {
@@ -22,10 +24,5 @@ public class PowerSword extends PowerUp {
     @Override
     public void apply(Player player) {
         player.increaseHitBox(extraSize);
-    }
-
-    @Override
-    public void update() {
-
     }
 }

@@ -5,7 +5,9 @@ import org.example.items.PowerUp;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
-
+/**
+ * Power-up, ktorý zvyšuje poškodenie hráča.
+ */
 public class PowerDamageIncrease extends PowerUp {
     int extraDamage;
     public PowerDamageIncrease(int x, int y, int extraDamage){
@@ -19,9 +21,5 @@ public class PowerDamageIncrease extends PowerUp {
     @Override
     public void apply(Player player) {
         player.increaseDamage(extraDamage);
-    }
-    @Override
-    public void update() {
-
     }
 }

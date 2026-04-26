@@ -6,7 +6,9 @@ import org.example.items.PowerUp;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
-
+/**
+ * Power-up, ktorý obnovuje životy hráča.
+ */
 public class PowerHealth extends PowerUp {
     int extraHp;
     public PowerHealth(int x, int y, int extraHp) {
@@ -23,8 +25,4 @@ public class PowerHealth extends PowerUp {
     @Override
     public void apply(Player player) {player.heal(extraHp);}
 
-    @Override
-    public void update() {
-
-    }
 }

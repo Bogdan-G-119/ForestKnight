@@ -1,7 +1,6 @@
 package org.example.core;
 
 import org.example.Drawable;
-import org.example.Updatable;
 import org.example.entities.Arrow;
 import org.example.entities.Enemy;
 import org.example.entities.Player;
@@ -15,6 +14,11 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/**
+ * Riadi celú hernú logiku.
+ * Obsahuje hráča, nepriateľov, projektily a power-upy
+ * a zabezpečuje ich aktualizáciu a renderovanie.
+ */
 public class GameWorld {
 
     public Player player;
@@ -114,6 +118,7 @@ public class GameWorld {
         g.setColor(Color.WHITE);
         g.drawString("HP: " + player.getHP(), 20, 30);
         g.drawString("Arrows: " + player.getArrowsLeft(), 20, 50);
+        g.drawString("Score: " + player.getScore(), 70, 30);
 
         g.drawRect(10, height - 60, 100, 50);
         g.drawString("1: Sword", 15, height - 40);

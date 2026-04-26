@@ -4,7 +4,10 @@ import org.example.entities.Enemy;
 
 import javax.swing.*;
 import java.util.Objects;
-
+/**
+ * Konkrétna implementácia nepriateľa - vlk.
+ * Má vlastné parametre ako rýchlosť a životy.
+ */
 public class EnemyBear extends Enemy {
     public EnemyBear(int x, int y) {
         super(new ImageIcon(Objects.requireNonNull(EnemyWolf.class.getResource("/Bear.png"))).getImage(), 0.5F);
@@ -19,10 +22,5 @@ public class EnemyBear extends Enemy {
         scoreValue = 60;
         hp = 35;
         isAlive = true;
-    }
-
-    @Override
-    public void update() {
-
     }
 }
