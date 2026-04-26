@@ -200,11 +200,4 @@ public class Player implements Drawable {
     public void increaseDamage(int amount){
         damage += amount;
     }
-    private boolean collisionEnable(Enemy enemy, Rectangle attackRect) {
-        return enemy.getBounds().intersects(attackRect);
-    }
-
-    public float getAttackProgress(){
-        return 1f - (attackCoolDown/30f);
-    }
 }
